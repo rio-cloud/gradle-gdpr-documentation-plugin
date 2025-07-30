@@ -1,0 +1,56 @@
+name: build-and-deploy.yaml
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - '**'
+jobs:
+  build:
+    name: build
+    runs-on: macos-15
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+    steps:
+
+      - name: setup-run-release-please
+        id: release
+        uses: googleapis/release-please-action@v4
+        with:
+          config-file: .github/release-please-config.json
+          manifest-file: .release-please-manifest.json
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: checkout-code
+        uses: actions/checkout@v4
+      - name: setup-java-version
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'corretto'
+          java-version: '21'
+      - name: setup-gradle-cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+      - name: gradle-build
+        run: |
+          cat gradle.properties
+          ./gradlew build
+          ./gradlew :test:generateGdprDocumentation
+      - name: publish
+        if: ${{ steps.release.outputs.release_created }}
+        run: |
+          VERSION="${RELEASE_TAG#v}"
+          ./gradlew publishPlugins -Pversion=$VERSION
+        env:
+          RELEASE_TAG: ${{ steps.release.outputs.tag_name }}
+          GRADLE_PUBLISH_KEY: ${{ secrets.GRADLE_PUBLISH_KEY }}
+          GRADLE_PUBLISH_SECRET: ${{ secrets.GRADLE_PUBLISH_SECRET }}

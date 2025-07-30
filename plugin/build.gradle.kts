@@ -14,10 +14,12 @@
  *  limitations under the License.
  */
 
+
 plugins {
     kotlin("jvm") version "2.1.0"
+    id("com.gradle.plugin-publish") version "1.3.1"
+    id("com.gradleup.shadow") version "8.3.9"
     `java-gradle-plugin`
-    `maven-publish`
 }
 
 group = "cloud.rio.gdprdoc"
@@ -31,7 +33,7 @@ dependencies {
     implementation(gradleApi())
     implementation("io.github.classgraph:classgraph:4.8.162")
 
-    api("cloud.rio.gdprdoc:core:0.0.1")
+    api("cloud.rio.gdprdoc:core:${project.version}")
 }
 
 java {
@@ -42,11 +44,15 @@ java {
 }
 
 gradlePlugin {
+    website = "https://company.rio.cloud"
+    vcsUrl = "https://github.com/rio-cloud/gradle-gdpr-documentation-plugin"
     plugins {
         create("rio-gdpr-documentation-plugin") {
             id = "cloud.rio.gdprdoc"
             implementationClass = "cloud.rio.gdprdoc.GdprDocumentationPlugin"
-            version = "0.0.1"
+            displayName = "RIO GDPR documentation plugin"
+            description = "Gradle plugin to generate data classification documentation (needed for the GDPR documentation) for your project based on annotations on data classes"
+            tags.set(listOf("gdpr", "documentation","rio", "rio.cloud"))
         }
     }
 }
@@ -55,8 +61,11 @@ tasks.named<Test>("test") {
     useJUnitPlatform()
 }
 
-publishing {
-    repositories {
-        mavenLocal()
-    }
+tasks.shadowJar {
+    /**
+     * This removes the default `-all` classifier
+     * Otherwise, we will observe the following error
+     * Please configure the `shadowJar` task to not add a classifier to the jar it produces
+     **/
+    archiveClassifier.set("")
 }
