@@ -17,7 +17,6 @@
 plugins {
     kotlin("jvm") version "2.1.0"
     `java-library`
-    `maven-publish`
 }
 
 group = "cloud.rio.gdprdoc"
@@ -39,17 +38,4 @@ java {
 
 tasks.named<Test>("test") {
     useJUnitPlatform()
-}
-
-publishing {
-    publications {
-        create<MavenPublication>("libraryMaven") {
-            from(components["java"])
-            artifactId = "core"
-            version = "0.0.1"
-        }
-    }
-    repositories {
-        mavenLocal()
-    }
 }

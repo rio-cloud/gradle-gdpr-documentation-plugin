@@ -17,7 +17,6 @@ on annotations on data classes.
 ```
 ./gradlew build
 ./gradlew :test:generateGdprDocumentation
-./gradlew publishToMavenLocal
 ```
 
 (note that due to a bug in gradle regarding composite builds you cannot run `./gradlew clean build`, but you need to run

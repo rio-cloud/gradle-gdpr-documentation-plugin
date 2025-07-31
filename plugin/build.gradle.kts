@@ -16,11 +16,12 @@
 
 plugins {
     kotlin("jvm") version "2.1.0"
+    id("com.gradle.plugin-publish") version "1.3.1"
     `java-gradle-plugin`
-    `maven-publish`
 }
 
 group = "cloud.rio.gdprdoc"
+version = "0.0.1"
 
 repositories {
     mavenCentral()
@@ -42,21 +43,19 @@ java {
 }
 
 gradlePlugin {
+    website = "https://company.rio.cloud"
+    vcsUrl = "https://github.com/rio-cloud/gradle-gdpr-documentation-plugin"
     plugins {
         create("rio-gdpr-documentation-plugin") {
             id = "cloud.rio.gdprdoc"
             implementationClass = "cloud.rio.gdprdoc.GdprDocumentationPlugin"
-            version = "0.0.1"
+            displayName = "RIO GDPR documentation plugin"
+            description = "Gradle plugin to generate data classification documentation (needed for the GDPR documentation) for your project based on annotations on data classes"
+            tags.set(listOf("gdpr", "documentation","rio", "rio.cloud"))
         }
     }
 }
 
 tasks.named<Test>("test") {
     useJUnitPlatform()
-}
-
-publishing {
-    repositories {
-        mavenLocal()
-    }
 }

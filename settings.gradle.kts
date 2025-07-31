@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-rootProject.name = "gdpr-documentation-poc"
+rootProject.name = "gradle-gdpr-documentation-plugin"
 
 includeBuild("core")
 includeBuild("plugin")
