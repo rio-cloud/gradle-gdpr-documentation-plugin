@@ -49,7 +49,7 @@ jobs:
         if: ${{ steps.release.outputs.release_created }}
         run: |
           VERSION="${RELEASE_TAG#v}"
-          ./gradlew publishPlugins -Pversion=$VERSION
+          ./gradlew :plugin:publishPlugins -Pversion=$VERSION
         env:
           RELEASE_TAG: ${{ steps.release.outputs.tag_name }}
           GRADLE_PUBLISH_KEY: ${{ secrets.GRADLE_PUBLISH_KEY }}
