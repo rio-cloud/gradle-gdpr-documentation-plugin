@@ -7,7 +7,7 @@
         {
           "type": "generic",
           "path": "gradle.properties",
-          "search": "^version=(.*)$",
+          "search": "(?m)^\\s*version\\s*=.*$",
           "replace": "version=${version}"
         }
       ]
