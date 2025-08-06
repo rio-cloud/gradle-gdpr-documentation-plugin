@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.4](https://github.com/rio-cloud/gradle-gdpr-documentation-plugin/compare/v0.0.3...v0.0.4) (2025-08-06)
+
+
+### Bug Fixes
+
+* change condition ([769219f](https://github.com/rio-cloud/gradle-gdpr-documentation-plugin/commit/769219fe1625ac7a09593553fa70c541890d2c9d))
+
 ## [0.0.3](https://github.com/rio-cloud/gradle-gdpr-documentation-plugin/compare/v0.0.2...v0.0.3) (2025-08-06)
 
 
