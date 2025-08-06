@@ -3,8 +3,6 @@ on:
   push:
     branches:
       - main
-  release:
-    types: [published]
   pull_request:
     branches:
       - '**'
@@ -17,6 +15,7 @@ jobs:
         run: |
           echo "Event name: ${{ github.event_name }}"
           echo "Tag name: ${{ github.event.release.tag_name }}"
+          echo "Release created: ${{ steps.release.outputs.release_created }}"
       - name: checkout-project
         uses: actions/checkout@v4
       - name: setup-java
@@ -41,7 +40,7 @@ jobs:
     name: deploy
     needs: build
     runs-on: macos-15
-    if: github.event_name == 'release'
+    if: ${{ steps.release.outputs.release_created }}
     steps:
       - name: checkout-project
         uses: actions/checkout@v4
