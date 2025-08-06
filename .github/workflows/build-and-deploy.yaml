@@ -10,6 +10,10 @@ jobs:
   build:
     name: build
     runs-on: macos-15
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
     steps:
       - name: setup-run-release-please
         id: release
