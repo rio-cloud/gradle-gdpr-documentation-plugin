@@ -5,6 +5,39 @@
       "include-v-in-tag": true,
       "extra-files": [
         "gradle.properties"
+      ],
+      "changelog-types": [
+        {
+          "type": "feat",
+          "section": "✨ Features"
+        },
+        {
+          "type": "fix",
+          "section": "🐛 Fixes"
+        },
+        {
+          "type": "docs",
+          "section": "📝 Documentation"
+        },
+        {
+          "type": "chore",
+          "section": "🔧 Chores",
+          "hidden": true
+        },
+        {
+          "type": "refactor",
+          "section": "♻️ Refactoring"
+        },
+        {
+          "type": "test",
+          "section": "🧪 Tests",
+          "hidden": true
+        },
+        {
+          "type": "ci",
+          "section": "⚙️ CI/CD",
+          "hidden": true
+        }
       ]
     }
   }
