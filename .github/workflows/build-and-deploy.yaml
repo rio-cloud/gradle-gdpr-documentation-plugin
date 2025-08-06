@@ -24,16 +24,13 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: checkout-code
-        if: ${{ steps.release.outputs.release_created }}
         uses: actions/checkout@v4
       - name: setup-java-version
-        if: ${{ steps.release.outputs.release_created }}
         uses: actions/setup-java@v4
         with:
           distribution: 'corretto'
           java-version: '21'
       - name: setup-gradle-cache
-        if: ${{ steps.release.outputs.release_created }}
         uses: actions/cache@v4
         with:
           path: |
