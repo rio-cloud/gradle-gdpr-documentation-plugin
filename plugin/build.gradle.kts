@@ -14,14 +14,15 @@
  *  limitations under the License.
  */
 
+
 plugins {
     kotlin("jvm") version "2.1.0"
     id("com.gradle.plugin-publish") version "1.3.1"
+    id("com.gradleup.shadow") version "8.3.9"
     `java-gradle-plugin`
 }
 
 group = "cloud.rio.gdprdoc"
-version = "0.0.1"
 
 repositories {
     mavenCentral()
@@ -32,7 +33,7 @@ dependencies {
     implementation(gradleApi())
     implementation("io.github.classgraph:classgraph:4.8.162")
 
-    api("cloud.rio.gdprdoc:core:0.0.1")
+    api("cloud.rio.gdprdoc:core:${project.version}")
 }
 
 java {
@@ -58,4 +59,13 @@ gradlePlugin {
 
 tasks.named<Test>("test") {
     useJUnitPlatform()
+}
+
+tasks.shadowJar {
+    /**
+     * This removes the default `-all` classifier
+     * Otherwise, we will observe the following error
+     * Please configure the `shadowJar` task to not add a classifier to the jar it produces
+     **/
+    archiveClassifier.set("")
 }

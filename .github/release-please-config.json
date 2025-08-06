@@ -1,0 +1,16 @@
+{
+  "packages": {
+    ".": {
+      "release-type": "simple",
+      "include-v-in-tag": true,
+      "extra-files": [
+        {
+          "type": "generic",
+          "path": "gradle.properties",
+          "search": "^version=(.*)$",
+          "replace": "version=${version}"
+        }
+      ]
+    }
+  }
+}
