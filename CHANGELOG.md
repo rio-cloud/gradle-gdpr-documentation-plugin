@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.1.0](https://github.com/rio-cloud/gradle-gdpr-documentation-plugin/compare/v0.0.7...v0.1.0) (2025-08-06)
+
+
+### Features
+
+* debug ([2e0822d](https://github.com/rio-cloud/gradle-gdpr-documentation-plugin/commit/2e0822dffa6642ee0007983ea2f68992b5120e29))
+* debug ([4f09d53](https://github.com/rio-cloud/gradle-gdpr-documentation-plugin/commit/4f09d53a1dc7515957d50db99ea4669c7a571c2d))
+
+
+### Bug Fixes
+
+* debug ([a1a3234](https://github.com/rio-cloud/gradle-gdpr-documentation-plugin/commit/a1a3234ef1d62328d5f45eacad70f8ce725591e0))
+* finish release-please setup ([a182158](https://github.com/rio-cloud/gradle-gdpr-documentation-plugin/commit/a182158b8fa9380c931eaca088ba28e4c60052ee))
+* try correct regex ([87fc668](https://github.com/rio-cloud/gradle-gdpr-documentation-plugin/commit/87fc668d8a45d094ff1bfebb441b667bbbbe34e1))
+* update regex yet again ([e7fb1b7](https://github.com/rio-cloud/gradle-gdpr-documentation-plugin/commit/e7fb1b7c71d50766e41f3f1eea8885cff2803b95))
+
 ## [0.0.7](https://github.com/rio-cloud/gradle-gdpr-documentation-plugin/compare/v0.0.6...v0.0.7) (2025-08-06)
 
 
