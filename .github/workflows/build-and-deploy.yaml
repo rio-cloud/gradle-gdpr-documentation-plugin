@@ -39,6 +39,10 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: |
             ${{ runner.os }}-gradle-
+      - name: gradle-build
+        run: |
+          ./gradlew build
+          ./gradlew :test:generateGdprDocumentation
       - name: publish
         if: ${{ steps.release.outputs.release_created }}
         run: |
