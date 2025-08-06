@@ -1,5 +1,8 @@
 # gradle-gdpr-documentation-plugin
 
+![Gradle Plugin Portal Version](https://img.shields.io/gradle-plugin-portal/v/cloud.rio.gdprdoc)
+![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/rio-cloud/gradle-gdpr-documentation-plugin/build-and-deploy.yaml)
+
 Gradle plugin to generate data classification documentation (needed for the GDPR documentation) for your project based
 on annotations on data classes.
 
