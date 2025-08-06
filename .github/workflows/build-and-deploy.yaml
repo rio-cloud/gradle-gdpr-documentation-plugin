@@ -15,8 +15,7 @@ jobs:
       pull-requests: write
       issues: write
     steps:
-      - name: Show gradle.properties
-        run: cat gradle.properties
+
       - name: setup-run-release-please
         id: release
         uses: googleapis/release-please-action@v4
@@ -43,6 +42,7 @@ jobs:
             ${{ runner.os }}-gradle-
       - name: gradle-build
         run: |
+          cat gradle.properties
           ./gradlew build
           ./gradlew :test:generateGdprDocumentation
       - name: publish
