@@ -4,7 +4,7 @@ on:
     branches:
       - main
   release:
-    types: [ published ]
+    types: [published]
   pull_request:
     branches:
       - '**'
@@ -13,6 +13,10 @@ jobs:
     name: build
     runs-on: macos-15
     steps:
+      - name: debug release info
+        run: |
+          echo "Event name: ${{ github.event_name }}"
+          echo "Tag name: ${{ github.event.release.tag_name }}"
       - name: checkout-project
         uses: actions/checkout@v4
       - name: setup-java
@@ -37,7 +41,7 @@ jobs:
     name: deploy
     needs: build
     runs-on: macos-15
-    if: github.event_name == 'release' && startsWith(github.event.release.tag_name, 'v')
+    if: github.event_name == 'release'
     steps:
       - name: checkout-project
         uses: actions/checkout@v4
