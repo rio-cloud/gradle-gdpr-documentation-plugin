@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.2](https://github.com/rio-cloud/gradle-gdpr-documentation-plugin/compare/v1.0.1...v1.0.2) (2025-08-07)
+
+
+### Bug Fixes
+
+* prepare next release. Update dependencies ([725335a](https://github.com/rio-cloud/gradle-gdpr-documentation-plugin/commit/725335a93d8cf5ec720d6afeed70e424f6b3461e))
+
 ## [1.0.1](https://github.com/rio-cloud/gradle-gdpr-documentation-plugin/compare/v1.0.0...v1.0.1) (2025-08-06)
 
 
