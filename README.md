@@ -68,7 +68,7 @@ Examples include:
 
 To trigger the action simply create an empty commit following the conventional commit format, e.g.:
 ```
-git commit --allow-empty -m "fix: prepare next release. Update dependencies
+git commit --allow-empty -m "fix: prepare next release. Update dependencies"
 git push
 ```
 
