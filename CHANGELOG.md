@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.3](https://github.com/rio-cloud/gradle-gdpr-documentation-plugin/compare/v1.0.2...v1.0.3) (2025-08-22)
+
+
+### Bug Fixes
+
+* specify plugin as compileOnly dependency as it is not needed in the runtime of the application ([4880d72](https://github.com/rio-cloud/gradle-gdpr-documentation-plugin/commit/4880d722cddeb072424ff5d453d4360de2a5bd7f))
+
 ## [1.0.2](https://github.com/rio-cloud/gradle-gdpr-documentation-plugin/compare/v1.0.1...v1.0.2) (2025-08-07)
 
 
