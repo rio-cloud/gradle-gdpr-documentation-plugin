@@ -29,8 +29,8 @@ repositories {
 }
 
 dependencies {
+    compileOnly(gradleApi())
     implementation(kotlin("stdlib"))
-    implementation(gradleApi())
     implementation("io.github.classgraph:classgraph:4.8.162")
 
     api("cloud.rio.gdprdoc:core:${project.version}")
@@ -68,4 +68,5 @@ tasks.shadowJar {
      * Please configure the `shadowJar` task to not add a classifier to the jar it produces
      **/
     archiveClassifier.set("")
+    minimize()
 }
