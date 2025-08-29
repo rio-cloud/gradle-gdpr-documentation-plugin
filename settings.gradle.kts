@@ -15,7 +15,5 @@
  */
 
 rootProject.name = "gradle-gdpr-documentation-plugin"
+include(":core", ":plugin", ":test")
 
-includeBuild("core")
-includeBuild("plugin")
-includeBuild("test")

@@ -43,7 +43,7 @@ Dependabot is configured in `.github/dependabot.yaml`.
 
 ### Release process
 
-The workflow uses the[release-please-action from Google](https://github.com/googleapis/release-please-action). 
+The workflow uses the [release-please-action from Google](https://github.com/googleapis/release-please-action). 
 
 > Release Please assumes you are using Conventional Commit messages.
 >
@@ -78,9 +78,5 @@ Currently, they are not managed as code.
 
 ### Build and test the plugin
 ```
-./gradlew build
-./gradlew :test:generateGdprDocumentation
+./gradlew clean build
 ```
-> [!NOTE]
-> due to a bug in gradle regarding composite builds you cannot run `./gradlew clean build`, but you need to run
-this as two separate commands

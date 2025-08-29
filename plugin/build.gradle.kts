@@ -16,13 +16,11 @@
 
 
 plugins {
-    kotlin("jvm") version "2.1.0"
+    kotlin("jvm")
     id("com.gradle.plugin-publish") version "1.3.1"
     id("com.gradleup.shadow") version "8.3.9"
     `java-gradle-plugin`
 }
-
-group = "cloud.rio.gdprdoc"
 
 repositories {
     mavenCentral()
@@ -32,8 +30,7 @@ dependencies {
     compileOnly(gradleApi())
     implementation(kotlin("stdlib"))
     implementation("io.github.classgraph:classgraph:4.8.162")
-
-    api("cloud.rio.gdprdoc:core:${project.version}")
+    implementation(project(":core"))
 }
 
 java {

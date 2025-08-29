@@ -1,3 +1,5 @@
+import org.jreleaser.model.Active
+
 /*
  *  Copyright 2025 TB Digital Services GmbH
  *
@@ -15,11 +17,11 @@
  */
 
 plugins {
-    kotlin("jvm") version "2.2.10"
+    kotlin("jvm")
     `java-library`
+    id("maven-publish")
+    id("org.jreleaser") version "1.19.0"
 }
-
-group = "cloud.rio.gdprdoc"
 
 repositories {
     mavenCentral()
@@ -34,8 +36,77 @@ java {
         languageVersion = JavaLanguageVersion.of(21)
         vendor = JvmVendorSpec.AMAZON
     }
+    withJavadocJar()
+    withSourcesJar()
 }
 
 tasks.named<Test>("test") {
     useJUnitPlatform()
+}
+
+publishing {
+    publications {
+        create<MavenPublication>("maven") {
+            artifactId = "core"
+            from(components["java"])
+
+            pom {
+                name.set("core")
+                description.set("Core annotations and models gdpr documentation plugin" )
+                url.set("https://github.com/rio-cloud/gradle-gdpr-documentation-plugin")
+                inceptionYear.set("2025")
+                licenses {
+                    license {
+                        name.set("Apache-2.0")
+                        url.set("https://spdx.org/licenses/Apache-2.0.html")
+                    }
+                }
+                developers {
+                    developer {
+                        id.set("rio-cloud")
+                        name.set("RIO – The Logistics Flow")
+                    }
+                }
+                scm {
+                    connection.set("scm:git:https://github.com/rio-cloud/gradle-gdpr-documentation-plugin.git")
+                    developerConnection.set("scm:git:ssh://git@github.com/rio-cloud/gradle-gdpr-documentation-plugin.git")
+                    url.set("https://github.com/rio-cloud/gradle-gdpr-documentation-plugin")
+                }
+            }
+        }
+    }
+
+    repositories {
+        maven {
+            url = uri(layout.buildDirectory.dir("staging-deploy"))
+        }
+    }
+}
+
+jreleaser {
+    // As of today one releaser must be presented even if this is a no-op configuration
+    // We only use it for signing and deploying to Maven Central
+    // see https://github.com/jreleaser/jreleaser/discussions/1725#discussioncomment-13888116
+    release {
+        github {
+            skipRelease = true
+        }
+    }
+    // required since this project is a subproject
+    gitRootSearch = true
+    signing {
+        active.set(Active.ALWAYS)
+        armored.set(true)
+    }
+    deploy {
+        maven {
+            mavenCentral {
+                register("sonatype") {
+                    active = Active.ALWAYS
+                    url = "https://central.sonatype.com/api/v1/publisher"
+                    stagingRepository(".gradle/build/staging-deploy")
+                }
+            }
+        }
+    }
 }

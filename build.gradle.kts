@@ -14,6 +14,18 @@
  *  limitations under the License.
  */
 
+plugins {
+    kotlin("jvm") version "2.2.10" apply false
+}
+
+allprojects {
+    group = providers.gradleProperty("group").get()
+    version = providers.gradleProperty("version").get()
+    repositories {
+        mavenCentral()
+    }
+}
+
 tasks.register("clean") {
     dependsOn(gradle.includedBuilds.map { it.task(":clean") })
 }

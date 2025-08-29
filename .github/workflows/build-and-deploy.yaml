@@ -15,7 +15,6 @@ jobs:
       pull-requests: write
       issues: write
     steps:
-
       - name: setup-run-release-please
         id: release
         uses: googleapis/release-please-action@v4
@@ -42,13 +41,15 @@ jobs:
             ${{ runner.os }}-gradle-
       - name: gradle-build
         run: |
-          cat gradle.properties
-          ./gradlew build
-          ./gradlew :test:generateGdprDocumentation
+          ./gradlew clean build
+          ./gradlew :core:jreleaserConfig // Validate JReleaser config
       - name: publish
         if: ${{ steps.release.outputs.release_created }}
         run: |
           VERSION="${RELEASE_TAG#v}"
+          ./gradlew clean -Pversion=$VERSION
+          ./gradlew :core:publish -Pversion=$VERSION
+          ./gradlew :core:jreleaserDeploy -Pversion=$VERSION
           ./gradlew :plugin:publishPlugins -Pversion=$VERSION
         env:
           RELEASE_TAG: ${{ steps.release.outputs.tag_name }}
