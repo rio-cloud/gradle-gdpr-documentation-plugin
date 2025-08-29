@@ -104,7 +104,9 @@ jreleaser {
                 register("sonatype") {
                     active = Active.ALWAYS
                     url = "https://central.sonatype.com/api/v1/publisher"
-                    stagingRepository(".gradle/build/staging-deploy")
+                    stagingRepository(
+                        project(":core").layout.buildDirectory.dir("staging-deploy").get().asFile.absolutePath
+                    )
                 }
             }
         }
