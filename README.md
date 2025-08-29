@@ -80,3 +80,10 @@ Currently, they are not managed as code.
 ```
 ./gradlew clean build
 ```
+
+### Build and the the example project
+
+```
+cd test
+../gradlew clean build
+```

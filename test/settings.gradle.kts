@@ -14,14 +14,20 @@
  *  limitations under the License.
  */
 
+rootProject.name = "gdpr-doc-example"
+
+// Resolve the plugin-under-development by id, without publishing
 pluginManagement {
+    includeBuild("..")  // path to the repo root that contains :plugin
     repositories {
         gradlePluginPortal()
-        includeBuild("../plugin")
+        mavenCentral()
     }
 }
 
-plugins {
-    // Apply the foojay-resolver plugin to allow automatic download of JDKs
-    id("org.gradle.toolchains.foojay-resolver-convention") version "1.0.0"
+// Use the local :core project instead of a published artifact
+includeBuild("..") {
+    dependencySubstitution {
+        substitute(module("cloud.rio.gdprdoc:core")).using(project(":core"))
+    }
 }

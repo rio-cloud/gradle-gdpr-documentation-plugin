@@ -1,5 +1,5 @@
 ╔═ gdpr documentation matches snapshot ═╗
-# GDPR documentation for test
+# GDPR documentation for gdpr-doc-example
 
 ## Data Flow Diagram
 
