@@ -1,5 +1,16 @@
 # Changelog
 
+## [2.0.0](https://github.com/rio-cloud/gradle-gdpr-documentation-plugin/compare/v1.0.3...v2.0.0) (2025-08-29)
+
+
+### ⚠ BREAKING CHANGES
+
+* deploy core JAR to Maven Central
+
+### Bug Fixes
+
+* deploy core JAR to Maven Central ([a8d045e](https://github.com/rio-cloud/gradle-gdpr-documentation-plugin/commit/a8d045e7126ec88ab2fcdbfea58b9c2511bdbd7d))
+
 ## [1.0.3](https://github.com/rio-cloud/gradle-gdpr-documentation-plugin/compare/v1.0.2...v1.0.3) (2025-08-26)
 
 
