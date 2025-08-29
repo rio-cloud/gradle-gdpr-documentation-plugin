@@ -42,12 +42,12 @@ jobs:
       - name: gradle-build
         run: |
           ./gradlew clean build
-          # Validate JReleaser config
-          ./gradlew :core:jreleaserConfig
       - name: publish
         if: ${{ steps.release.outputs.release_created }}
         run: |
           VERSION="${RELEASE_TAG#v}"
+          # Validate JReleaser config
+          ./gradlew :core:jreleaserConfig
           ./gradlew clean -Pversion=$VERSION
           ./gradlew :core:publish -Pversion=$VERSION
           ./gradlew :core:jreleaserDeploy -Pversion=$VERSION
