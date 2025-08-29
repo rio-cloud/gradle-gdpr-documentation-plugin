@@ -42,7 +42,8 @@ jobs:
       - name: gradle-build
         run: |
           ./gradlew clean build
-          ./gradlew :core:jreleaserConfig // Validate JReleaser config
+          # Validate JReleaser config
+          ./gradlew :core:jreleaserConfig
       - name: publish
         if: ${{ steps.release.outputs.release_created }}
         run: |
