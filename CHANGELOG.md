@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.0.1](https://github.com/rio-cloud/gradle-gdpr-documentation-plugin/compare/v2.0.0...v2.0.1) (2025-08-29)
+
+
+### Bug Fixes
+
+* wrong stagingRepositoryPath ([12d6d6a](https://github.com/rio-cloud/gradle-gdpr-documentation-plugin/commit/12d6d6a08d39809f32d6df13de7b365c4c642e21))
+
 ## [2.0.0](https://github.com/rio-cloud/gradle-gdpr-documentation-plugin/compare/v1.0.3...v2.0.0) (2025-08-29)
 
 
