@@ -1,0 +1,8 @@
+classes:
+  - className: cloud.rio.example.adapter.NonExistentClass # Non-existant class, should be ignored
+    incoming:
+      whatToDo: "Nothing"
+      whereFrom: "Somewhere"
+    fields:
+      - name: id
+        level: NON_PII

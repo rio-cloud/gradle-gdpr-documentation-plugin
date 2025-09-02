@@ -1,0 +1,18 @@
+classes:
+  - className: cloud.rio.example.adapter.restclient.DriverDTO
+    incoming:
+      whatToDo: "Forward via API"
+      whereFrom: "Some external service"
+      links:
+        - cloud.rio.example.adapter.rest.DriverEventRest
+    fields:
+      - name: id
+        level: NON_PII
+      - name: identification
+        level: PSEUDONYM
+      - name: firstName
+        level: PII
+      - name: lastName
+        level: PII
+      - name: email # Non-existant field, should be ignored
+        level: PII

@@ -117,7 +117,7 @@ class MarkdownReporter {
                 this.format(field, item)
             }
             val links = report.linksOf(item.id)
-                .joinToString(", ") { link -> "[${link.name}](#${link.id})" }
+                .joinToString(", ") { link -> formatAsAnchorLink(link.name, link.id) }
             markdownBuilder.append("| $formattedRow | $links |\n")
         }
         markdownBuilder.append("\n")
@@ -188,7 +188,7 @@ class MarkdownReporter {
         GdprDataItem.Incoming::name,
         GdprDataItem.Outgoing::name,
         GdprDataItem.Persisted::name,
-            -> "[${item.name}](#${item.id})"
+            -> formatAsAnchorLink(item.name, item.id)
 
         GdprDataItem.Incoming::fields,
         GdprDataItem.Outgoing::fields,
@@ -210,5 +210,7 @@ class MarkdownReporter {
         val displayName = this.name.replace("_", " ")
         return "<span style=\"background-color:$color; padding:2px 10px; border-radius:3px;\">${displayName}</span>"
     }
+
+    private fun formatAsAnchorLink(name: String, id: GdprItemId): String = "[${name}](#${id.value.replace("$", "\\$")})"
 }
 

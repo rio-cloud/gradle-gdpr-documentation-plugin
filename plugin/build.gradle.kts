@@ -17,6 +17,7 @@
 
 plugins {
     kotlin("jvm")
+    kotlin("plugin.serialization") version "1.9.0"
     id("com.gradle.plugin-publish") version "1.3.1"
     id("com.gradleup.shadow") version "8.3.9"
     `java-gradle-plugin`
@@ -28,6 +29,7 @@ repositories {
 
 dependencies {
     compileOnly(gradleApi())
+    implementation("com.charleskorn.kaml:kaml:0.92.0")
     implementation(kotlin("stdlib"))
     implementation("io.github.classgraph:classgraph:4.8.162")
     implementation(project(":core"))
@@ -48,8 +50,9 @@ gradlePlugin {
             id = "cloud.rio.gdprdoc"
             implementationClass = "cloud.rio.gdprdoc.GdprDocumentationPlugin"
             displayName = "RIO GDPR documentation plugin"
-            description = "Gradle plugin to generate data classification documentation (needed for the GDPR documentation) for your project based on annotations on data classes"
-            tags.set(listOf("gdpr", "documentation","rio", "rio.cloud"))
+            description =
+                "Gradle plugin to generate data classification documentation (needed for the GDPR documentation) for your project based on annotations on data classes"
+            tags.set(listOf("gdpr", "documentation", "rio", "rio.cloud"))
         }
     }
 }

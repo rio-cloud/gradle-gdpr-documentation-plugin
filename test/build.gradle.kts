@@ -22,6 +22,14 @@ java {
     }
 }
 
+tasks {
+    generateGdprDocumentation {
+        additionalGdprDataFiles.setFrom(
+            fileTree("src/main/resources") { include("**/gdpr-documentation.yaml") }
+        )
+    }
+}
+
 tasks.named<Test>("test") {
     useJUnitPlatform()
     dependsOn("generateGdprDocumentation")
