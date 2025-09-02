@@ -31,7 +31,7 @@ dependencies {
     compileOnly(gradleApi())
     implementation("com.charleskorn.kaml:kaml:0.92.0")
     implementation(kotlin("stdlib"))
-    implementation("io.github.classgraph:classgraph:4.8.162")
+    implementation("io.github.classgraph:classgraph:4.8.181")
     implementation(project(":core"))
 }
 
