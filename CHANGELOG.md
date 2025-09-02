@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.0](https://github.com/rio-cloud/gradle-gdpr-documentation-plugin/compare/v2.0.1...v2.1.0) (2025-09-02)
+
+
+### Features
+
+* Allow specifying additional GDPR data in yaml files ([b8c9ee7](https://github.com/rio-cloud/gradle-gdpr-documentation-plugin/commit/b8c9ee78cb7137acb7365f620ebb69bbb30f5340))
+
 ## [2.0.1](https://github.com/rio-cloud/gradle-gdpr-documentation-plugin/compare/v2.0.0...v2.0.1) (2025-08-29)
 
 
