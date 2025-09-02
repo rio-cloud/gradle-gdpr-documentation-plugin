@@ -33,7 +33,8 @@ digraph G {
     "cloud.rio.example.adapter.kafka.PermissionsKafka#IN" [label="PermissionsKafka", shape=box];
     "cloud.rio.example.adapter.publisher.DriverEventKafka#OUT" [label="DriverEventKafka", shape=hexagon];
     "cloud.rio.example.adapter.rest.DriverEventRest#OUT" [label="DriverEventRest", shape=hexagon];
-    { rank=same; "cloud.rio.example.adapter.kafka.DriverKafka#IN"; "cloud.rio.example.adapter.kafka.IotDataKafka#IN"; "cloud.rio.example.adapter.kafka.PermissionsKafka#IN"; }
+    "cloud.rio.example.adapter.restclient.DriverDTO#IN" [label="DriverDTO", shape=box];
+    { rank=same; "cloud.rio.example.adapter.kafka.DriverKafka#IN"; "cloud.rio.example.adapter.kafka.IotDataKafka#IN"; "cloud.rio.example.adapter.kafka.PermissionsKafka#IN"; "cloud.rio.example.adapter.restclient.DriverDTO#IN"; }
     { rank=same; "cloud.rio.example.adapter.db.DriverEventDb#DB"; "cloud.rio.example.adapter.kafka.DriverKafka#DB"; "cloud.rio.example.adapter.kafka.PermissionsKafka#DB"; }
     { rank=same; "cloud.rio.example.adapter.publisher.DriverEventKafka#OUT"; "cloud.rio.example.adapter.rest.DriverEventRest#OUT"; }
     "cloud.rio.example.adapter.kafka.IotDataKafka#IN" -> "cloud.rio.example.adapter.db.DriverEventDb#DB";
@@ -43,6 +44,7 @@ digraph G {
     "cloud.rio.example.adapter.kafka.IotDataKafka#IN" -> "cloud.rio.example.adapter.publisher.DriverEventKafka#OUT";
     "cloud.rio.example.adapter.publisher.DriverEventKafka#OUT" -> "cloud.rio.example.adapter.rest.DriverEventRest#OUT" [dir=none, style=dotted];
     "cloud.rio.example.adapter.db.DriverEventDb#DB" -> "cloud.rio.example.adapter.rest.DriverEventRest#OUT";
+    "cloud.rio.example.adapter.restclient.DriverDTO#IN" -> "cloud.rio.example.adapter.rest.DriverEventRest#OUT";
   }
 }
 ```
@@ -53,6 +55,7 @@ digraph G {
 | [DriverKafka](#cloud.rio.example.adapter.kafka.DriverKafka#IN) | Kafka topic rio.iot-events | Enrich events during aggregation with driver card number | `driverCardNumber`, `name` | [DriverKafka](#cloud.rio.example.adapter.kafka.DriverKafka#DB) |
 | [IotDataKafka](#cloud.rio.example.adapter.kafka.IotDataKafka#IN) | Kafka topic rio.iot-events | Generate aggregated events | `assetId`, `timestamp`, `position`, `driverCardNumber` | [DriverEventDb](#cloud.rio.example.adapter.db.DriverEventDb#DB), [DriverEventKafka](#cloud.rio.example.adapter.publisher.DriverEventKafka#OUT) |
 | [PermissionsKafka](#cloud.rio.example.adapter.kafka.PermissionsKafka#IN) | Kafka topic rio.permissions | Implement Access Control for API | `userId`, `hasAccess` | [PermissionsKafka](#cloud.rio.example.adapter.kafka.PermissionsKafka#DB) |
+| [DriverDTO](#cloud.rio.example.adapter.restclient.DriverDTO#IN) | Some external service | Forward via API | `id`, `identification`, `firstName`, `lastName` | [DriverEventRest](#cloud.rio.example.adapter.rest.DriverEventRest#OUT) |
 
 <details><summary>Field Details</summary>
 
@@ -137,6 +140,41 @@ digraph G {
       <td><code>hasAccess</code></td>
       <td><span style="background-color:green; padding:2px 10px; border-radius:3px;">NON PII</span></td>
       <td>boolean</td>
+    </tr>
+  </tbody>
+</table>
+
+<a id="cloud.rio.example.adapter.restclient.DriverDTO#IN"></a>
+
+<h3>DriverDTO</h3>
+<table>
+  <thead>
+    <tr>
+      <th>Field Name</th>
+      <th>PII Level</th>
+      <th>Type</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>id</code></td>
+      <td><span style="background-color:green; padding:2px 10px; border-radius:3px;">NON PII</span></td>
+      <td>UUID</td>
+    </tr>
+    <tr>
+      <td><code>identification</code></td>
+      <td><span style="background-color:darkorange; padding:2px 10px; border-radius:3px;">PSEUDONYM</span></td>
+      <td>String</td>
+    </tr>
+    <tr>
+      <td><code>firstName</code></td>
+      <td><span style="background-color:red; padding:2px 10px; border-radius:3px;">PII</span></td>
+      <td>String</td>
+    </tr>
+    <tr>
+      <td><code>lastName</code></td>
+      <td><span style="background-color:red; padding:2px 10px; border-radius:3px;">PII</span></td>
+      <td>String</td>
     </tr>
   </tbody>
 </table>
@@ -245,7 +283,7 @@ digraph G {
 | Name | Shared With | Why | Fields | Links |
 | --- | --- | --- | --- | ----- |
 | [DriverEventKafka](#cloud.rio.example.adapter.publisher.DriverEventKafka#OUT) | Published to kafka topic rio.driver-events | To provide driver events to other services | `assetId`, `timestamp`, `driverCardNumber` | [IotDataKafka](#cloud.rio.example.adapter.kafka.IotDataKafka#IN), [DriverEventRest](#cloud.rio.example.adapter.rest.DriverEventRest#OUT) |
-| [DriverEventRest](#cloud.rio.example.adapter.rest.DriverEventRest#OUT) | Logged in user via frontend / API call | To show the driver event on the live monitor | `assetId`, `timestamp`, `address`, `driverName` | [DriverKafka](#cloud.rio.example.adapter.kafka.DriverKafka#DB), [DriverEventKafka](#cloud.rio.example.adapter.publisher.DriverEventKafka#OUT), [DriverEventDb](#cloud.rio.example.adapter.db.DriverEventDb#DB) |
+| [DriverEventRest](#cloud.rio.example.adapter.rest.DriverEventRest#OUT) | Logged in user via frontend / API call | To show the driver event on the live monitor | `assetId`, `timestamp`, `address`, `driverName` | [DriverKafka](#cloud.rio.example.adapter.kafka.DriverKafka#DB), [DriverEventKafka](#cloud.rio.example.adapter.publisher.DriverEventKafka#OUT), [DriverEventDb](#cloud.rio.example.adapter.db.DriverEventDb#DB), [DriverDTO](#cloud.rio.example.adapter.restclient.DriverDTO#IN) |
 
 <details><summary>Field Details</summary>
 

@@ -16,6 +16,8 @@
 
 package cloud.rio.gdprdoc
 
+import cloud.rio.gdprdoc.additionalgdprdata.AdditionalGdprDataLoader
+import cloud.rio.gdprdoc.additionalgdprdata.AdditionalGdprDataMapper
 import cloud.rio.gdprdoc.annotations.GdprData
 import cloud.rio.gdprdoc.report.GdprDataItem
 import cloud.rio.gdprdoc.report.GdprItemId
@@ -31,6 +33,7 @@ import org.gradle.api.provider.Property
 import org.gradle.api.tasks.Classpath
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.InputFiles
+import org.gradle.api.tasks.Optional
 import org.gradle.api.tasks.OutputFile
 import org.gradle.api.tasks.TaskAction
 import org.gradle.internal.extensions.stdlib.uncheckedCast
@@ -50,6 +53,10 @@ abstract class GenerateGdprDocumentationTask : DefaultTask() {
 
     @get:OutputFile
     abstract val markdownReport: RegularFileProperty
+
+    @get:InputFiles
+    @get:Optional
+    abstract val additionalGdprDataFiles: ConfigurableFileCollection
 
     @TaskAction
     fun process() {
@@ -88,6 +95,26 @@ abstract class GenerateGdprDocumentationTask : DefaultTask() {
                 logger.error("Error processing class ${classInfo.name}: ${e.message}")
                 throw e
             }
+        }
+
+        val additionalGdprDataLoader = AdditionalGdprDataLoader()
+        val additionalGdprDataMapper = AdditionalGdprDataMapper(classPathFiles, logger)
+        additionalGdprDataFiles.files.forEach {
+            logger.lifecycle("Loading additional GDPR data from file: ${it.absolutePath}")
+            val additionalGdprData = try {
+                additionalGdprDataLoader.loadAdditionalGdprDataFromYamlFile(it)
+            } catch (e: Exception) {
+                logger.warn("Cannot read additional GDPR data from file ${it.absolutePath}: ${e.message}")
+                return@forEach
+            }
+            val (additionalGdprDataItems, additionalLinks) = additionalGdprDataMapper.mapToGdprDataItems(
+                additionalGdprData
+            )
+            additionalGdprDataItems.forEach { newItem ->
+                gdprDataItems.removeIf { existingItem -> existingItem.id == newItem.id }
+                gdprDataItems.add(newItem)
+            }
+            linkTargetClassesByItemId.putAll(additionalLinks)
         }
 
         val gdprItemLinks = linkTargetClassesByItemId.flatMap { (source, targetClasses) ->
