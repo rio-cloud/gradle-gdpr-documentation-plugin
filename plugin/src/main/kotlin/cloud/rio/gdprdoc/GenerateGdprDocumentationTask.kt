@@ -85,7 +85,9 @@ abstract class GenerateGdprDocumentationTask : DefaultTask() {
             .overrideClassLoaders(scanClassLoader)
             .scan()
 
-        scanResult.getClassesWithAnnotation(GdprData::class.java.canonicalName).forEach { classInfo ->
+        scanResult.getClassesWithAnnotation(GdprData::class.java.canonicalName)
+            .filterNot { it.name.startsWith("cloud.rio.gdprdoc.annotations") }
+            .forEach { classInfo ->
             try {
                 logger.debug("Processing class: ${classInfo.name}")
                 val (newItems, newlinks) = processClass(classInfo)
