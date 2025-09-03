@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.1](https://github.com/rio-cloud/gradle-gdpr-documentation-plugin/compare/v2.1.0...v2.1.1) (2025-09-03)
+
+
+### Bug Fixes
+
+* filter out annotation classes themselves when scanning for annotated classes ([#29](https://github.com/rio-cloud/gradle-gdpr-documentation-plugin/issues/29)) ([5522cf3](https://github.com/rio-cloud/gradle-gdpr-documentation-plugin/commit/5522cf30a54e4cc80cd6e976e17e00045b874345))
+
 ## [2.1.0](https://github.com/rio-cloud/gradle-gdpr-documentation-plugin/compare/v2.0.1...v2.1.0) (2025-09-02)
 
 
