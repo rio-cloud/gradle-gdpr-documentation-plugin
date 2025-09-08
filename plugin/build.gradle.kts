@@ -17,7 +17,7 @@
 
 plugins {
     kotlin("jvm")
-    kotlin("plugin.serialization") version "1.9.0"
+    kotlin("plugin.serialization") version "2.2.10"
     id("com.gradle.plugin-publish") version "1.3.1"
     id("com.gradleup.shadow") version "8.3.9"
     `java-gradle-plugin`
