@@ -29,7 +29,7 @@ repositories {
 
 dependencies {
     compileOnly(gradleApi())
-    implementation("com.charleskorn.kaml:kaml:0.92.0")
+    implementation("com.charleskorn.kaml:kaml:0.94.0")
     implementation(kotlin("stdlib"))
     implementation("io.github.classgraph:classgraph:4.8.162")
     implementation(project(":core"))
