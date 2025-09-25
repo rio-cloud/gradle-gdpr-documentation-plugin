@@ -80,14 +80,14 @@ classes:
       sharedWith: Exposed via API
       why: Display in frontend
       links:
-      - cloud.rio.example.adapter.restclient.IncomingDTO
+        - cloud.rio.example.adapter.restclient.IncomingDTO
     fields:
       ...
   - className: cloud.rio.example.adapter.db.PersistedEntity
     persisted:
       retention: 6 months
       responsibleForDeletion: Automatic deletion job
-      links: []
+      links: [ ]
     fields:
       ...
   - className: cloud.rio.example.adapter.readmodel.ReadModel
@@ -96,7 +96,7 @@ classes:
       whereFrom: Some external service
       retention: 6 months
       responsibleForDeletion: Automatic deletion job
-      links: []
+      links: [ ]
     fields:
       ...
 ```
@@ -116,15 +116,27 @@ dependencies {
 }
 ```
 
-You can configure the documentation generation task to change the output file name and location, and to specify the
-configuration files to use, for example in the following way:
+You can configure the documentation generation task to
+
+* change the output file name and location
+* specify the configuration files to use
+* include annotated classes from other projects
+  The following example shows how to do this:
 
 ```kotlin
 tasks {
     generateGdprDocumentation {
+        // Change output
         markdownReport = file("docs/gdpr/gdpr-documentation.md")
+        // Specify configuration files
         additionalGdprDataFiles.setFrom(
             fileTree("src/main/resources") { include("**/gdpr-documentation.yaml") },
+        )
+        // Include annotated classes from another project
+        classpath.from(
+            configurations.runtimeClasspath.get().filter {
+                it.name.contains("some-other-project")
+            }
         )
     }
 }
