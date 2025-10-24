@@ -40,14 +40,12 @@ data class AdditionalGdprDataItem(
 data class Outgoing(
     val sharedWith: String,
     val why: String,
-    val links: List<String> = emptyList(),
 )
 
 @Serializable
 data class Incoming(
     val whereFrom: String,
     val whatToDo: String,
-    val links: List<String> = emptyList(),
 )
 
 @Serializable
@@ -55,7 +53,6 @@ data class Persisted(
     val databaseIdentifier: String,
     val retention: String,
     val responsibleForDeletion: String,
-    val links: List<String> = emptyList(),
 )
 
 @Serializable
@@ -65,7 +62,6 @@ data class ReadModel(
     val databaseIdentifier: String,
     val retention: String = READ_MODEL_DEFAULT_RETENTION,
     val responsibleForDeletion: String = READ_MODEL_DEFAULT_RESPONSIBLE_FOR_DELETION,
-    val links: List<String> = emptyList(),
 )
 
 @Serializable

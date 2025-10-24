@@ -25,7 +25,6 @@ import java.time.Instant
 @GdprData.Outgoing(
     sharedWith = "Logged in user via frontend / API call",
     why = "To show the driver event on the live monitor",
-    links = [DriverEventDb::class],
 )
 data class DriverEventRest(
     @GdprData.Field(level = PiiLevel.PSEUDONYM)

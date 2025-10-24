@@ -45,7 +45,6 @@ data class PositionKafka(
     whereFrom = "Kafka topic rio.iot-events",
     whatToDo = "Enrich events during aggregation with driver card number",
     databaseIdentifier = "arn:aws:dynamodb:region:accountId:table/driver-events",
-    links = [DriverEventRest::class],
 )
 data class DriverKafka(
     @GdprData.Field(level = PiiLevel.PSEUDONYM)

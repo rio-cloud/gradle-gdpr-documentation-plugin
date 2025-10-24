@@ -28,13 +28,7 @@ class MarkdownReporter {
 
         markdownBuilder.append("# GDPR documentation for ${report.serviceName}\n\n")
 
-        val graph = PlantUmlReporter().generateReport(report)
-        markdownBuilder.append("## Data Flow Diagram\n\n")
-        markdownBuilder.append("```plantuml\n")
-        markdownBuilder.append(graph)
-        markdownBuilder.append("```\n")
-
-        mainTable(markdownBuilder, report.data, report = report)
+        mainTable(markdownBuilder, report.data)
 
         return markdownBuilder.toString()
     }
@@ -43,7 +37,6 @@ class MarkdownReporter {
         markdownBuilder: StringBuilder,
         items: List<GdprDataItem>,
         compactView: Boolean = false,
-        report: GdprReport,
     ) {
         val incomingItems = items.filterIsInstance<GdprDataItem.Incoming>()
         val outgoingItems = items.filterIsInstance<GdprDataItem.Outgoing>()
@@ -53,7 +46,7 @@ class MarkdownReporter {
             if (!compactView) {
                 markdownBuilder.append("## Incoming\n\n")
             }
-            renderIncomingTable(markdownBuilder, incomingItems, compactView, report = report)
+            renderIncomingTable(markdownBuilder, incomingItems, compactView)
             renderFieldDetails(markdownBuilder, incomingItems)
         }
 
@@ -61,7 +54,7 @@ class MarkdownReporter {
             if (!compactView) {
                 markdownBuilder.append("## Persisted\n\n")
             }
-            renderPersistedTable(markdownBuilder, persistedItems, compactView, report)
+            renderPersistedTable(markdownBuilder, persistedItems, compactView)
             renderFieldDetails(markdownBuilder, persistedItems)
         }
 
@@ -69,7 +62,7 @@ class MarkdownReporter {
             if (!compactView) {
                 markdownBuilder.append("## Outgoing\n\n")
             }
-            renderOutgoingTable(markdownBuilder, outgoingItems, compactView, report)
+            renderOutgoingTable(markdownBuilder, outgoingItems, compactView)
             renderFieldDetails(markdownBuilder, outgoingItems)
         }
     }
@@ -108,17 +101,14 @@ class MarkdownReporter {
         markdownBuilder: StringBuilder,
         items: List<T>,
         fields: List<KProperty1<T, *>>,
-        report: GdprReport,
     ) {
-        markdownBuilder.append("| ${fields.joinToString(" | ") { headings[it]!! }} | Links |\n")
-        markdownBuilder.append("| ${fields.joinToString(" | ") { "---" }} | ----- |\n")
+        markdownBuilder.append("| ${fields.joinToString(" | ") { headings[it]!! }}  |\n")
+        markdownBuilder.append("| ${fields.joinToString(" | ") { "---" }} |\n")
         items.forEach { item ->
             val formattedRow = fields.joinToString(" | ") { field ->
                 this.format(field, item)
             }
-            val links = report.linksOf(item.id)
-                .joinToString(", ") { link -> formatAsAnchorLink(link.name, link.id) }
-            markdownBuilder.append("| $formattedRow | $links |\n")
+            markdownBuilder.append("| $formattedRow |\n")
         }
         markdownBuilder.append("\n")
     }
@@ -127,7 +117,6 @@ class MarkdownReporter {
         markdownBuilder: StringBuilder,
         items: List<GdprDataItem.Incoming>,
         compactView: Boolean,
-        report: GdprReport,
     ) {
         val fields = listOfNotNull(
             GdprDataItem.Incoming::name.takeIf { !compactView },
@@ -135,14 +124,13 @@ class MarkdownReporter {
             GdprDataItem.Incoming::whatToDo,
             GdprDataItem.Incoming::fields.takeIf { !compactView },
         )
-        return renderTable(markdownBuilder, items, fields, report)
+        return renderTable(markdownBuilder, items, fields)
     }
 
     private fun renderOutgoingTable(
         markdownBuilder: StringBuilder,
         items: List<GdprDataItem.Outgoing>,
         compactView: Boolean,
-        report: GdprReport,
     ) {
         val fields = listOfNotNull(
             GdprDataItem.Outgoing::name.takeIf { !compactView },
@@ -150,14 +138,13 @@ class MarkdownReporter {
             GdprDataItem.Outgoing::why,
             GdprDataItem.Outgoing::fields.takeIf { !compactView },
         )
-        return renderTable(markdownBuilder, items, fields, report)
+        return renderTable(markdownBuilder, items, fields)
     }
 
     private fun renderPersistedTable(
         markdownBuilder: StringBuilder,
         items: List<GdprDataItem.Persisted>,
         compactView: Boolean,
-        report: GdprReport,
     ) {
         val fields = listOfNotNull(
             GdprDataItem.Persisted::name.takeIf { !compactView },
@@ -166,7 +153,7 @@ class MarkdownReporter {
             GdprDataItem.Persisted::retention,
             GdprDataItem.Persisted::fields.takeIf { !compactView },
         )
-        return renderTable(markdownBuilder, items, fields, report)
+        return renderTable(markdownBuilder, items, fields)
     }
 
 
