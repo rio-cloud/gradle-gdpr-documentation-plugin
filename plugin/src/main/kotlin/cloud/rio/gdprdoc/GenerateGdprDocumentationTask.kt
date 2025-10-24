@@ -61,8 +61,6 @@ abstract class GenerateGdprDocumentationTask : DefaultTask() {
     fun process() {
 
         val gdprDataItems = mutableListOf<GdprDataItem>()
-        val linkTargetClassesByItemId = mutableMapOf<GdprItemId, MutableSet<String>>()
-
         classpath.files.forEach { file ->
             if (file.isDirectory) {
                 logger.debug("Directory: ${file.absolutePath}")
@@ -89,9 +87,8 @@ abstract class GenerateGdprDocumentationTask : DefaultTask() {
             .forEach { classInfo ->
             try {
                 logger.debug("Processing class: ${classInfo.name}")
-                val (newItems, newlinks) = processClass(classInfo)
+                val newItems = processClass(classInfo)
                 gdprDataItems.addAll(newItems)
-                linkTargetClassesByItemId.putAll(newlinks)
             } catch (e: Exception) {
                 logger.error("Error processing class ${classInfo.name}: ${e.message}")
                 throw e
@@ -126,10 +123,8 @@ abstract class GenerateGdprDocumentationTask : DefaultTask() {
         logger.lifecycle("GDPR Data Items: $gdprDataItems")
     }
 
-    fun processClass(classInfo: ClassInfo): Pair<List<GdprDataItem>, Map<GdprItemId, MutableSet<String>>> {
+    fun processClass(classInfo: ClassInfo): List<GdprDataItem> {
         val items = mutableListOf<GdprDataItem>()
-
-        val linkTargetClassesByItemId = mutableMapOf<GdprItemId, MutableSet<String>>()
 
         classInfo.processAnnotation(GdprData.Incoming::class.java) { gdprData, fieldItems ->
             val id = GdprItemId(classInfo.name + "#IN")
@@ -175,8 +170,6 @@ abstract class GenerateGdprDocumentationTask : DefaultTask() {
         classInfo.processAnnotation(GdprData.ReadModel::class.java) { gdprData, fieldItems ->
             val dbId = GdprItemId(classInfo.name + "#DB")
             val inId = GdprItemId(classInfo.name + "#IN")
-            linkTargetClassesByItemId.getOrPut(inId) { mutableSetOf() }
-                .add(classInfo.name)
             listOf(
                 GdprDataItem.Persisted(
                     id = dbId,
@@ -200,7 +193,7 @@ abstract class GenerateGdprDocumentationTask : DefaultTask() {
             logger.warn("No annotation found for class ${classInfo.name} other than the @GdprData marker")
         }
 
-        return Pair(items, linkTargetClassesByItemId)
+        return items
     }
 
     fun <T : Annotation> ClassInfo.processAnnotation(
