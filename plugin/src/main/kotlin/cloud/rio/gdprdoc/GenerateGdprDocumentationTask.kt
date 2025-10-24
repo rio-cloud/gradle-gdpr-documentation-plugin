@@ -220,6 +220,7 @@ abstract class GenerateGdprDocumentationTask : DefaultTask() {
                     name = classInfo.simpleName,
                     retention = gdprData.retention,
                     responsibleForDeletion = gdprData.responsibleForDeletion,
+                    databaseIdentifier = gdprData.databaseIdentifier,
                     fields = fieldItems,
                 ),
             )
@@ -238,6 +239,7 @@ abstract class GenerateGdprDocumentationTask : DefaultTask() {
                     name = classInfo.simpleName,
                     retention = gdprData.retention,
                     responsibleForDeletion = gdprData.responsibleForDeletion,
+                    databaseIdentifier = gdprData.databaseIdentifier,
                     fields = fieldItems,
                 ),
                 GdprDataItem.Incoming(

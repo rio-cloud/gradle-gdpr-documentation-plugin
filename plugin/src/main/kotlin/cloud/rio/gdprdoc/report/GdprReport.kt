@@ -95,6 +95,7 @@ sealed class GdprDataItem {
     data class Persisted(
         override val id: GdprItemId,
         override val name: String,
+        val databaseIdentifier: String,
         val retention: String,
         val responsibleForDeletion: String,
         override val fields: List<Field> = emptyList(),
