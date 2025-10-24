@@ -83,6 +83,7 @@ classes:
     persisted:
       retention: 6 months
       responsibleForDeletion: Automatic deletion job
+      databaseIdentifier: arn:aws:dynamodb:region:accountId:table/persisted-entity
     fields:
       ...
   - className: cloud.rio.example.adapter.readmodel.ReadModel
@@ -90,6 +91,7 @@ classes:
       whatToDo: Persist in DB
       whereFrom: Some external service
       retention: 6 months
+      databaseIdentifier: arn:aws:dynamodb:region:accountId:table/read-model
       responsibleForDeletion: Automatic deletion job
     fields:
       ...
