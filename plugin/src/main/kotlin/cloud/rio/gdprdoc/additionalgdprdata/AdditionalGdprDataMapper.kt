@@ -90,6 +90,7 @@ class AdditionalGdprDataMapper(classPathFiles: Set<File>, val logger: Logger) {
                     name = simpleClassName,
                     retention = it.retention,
                     responsibleForDeletion = it.responsibleForDeletion,
+                    databaseIdentifier = it.databaseIdentifier,
                     fields = fields,
                 )
                 gdprDataItems.add(persisted)
@@ -103,6 +104,7 @@ class AdditionalGdprDataMapper(classPathFiles: Set<File>, val logger: Logger) {
                     name = simpleClassName,
                     retention = it.retention,
                     responsibleForDeletion = it.responsibleForDeletion,
+                    databaseIdentifier = it.databaseIdentifier,
                     fields = fields,
                 )
                 val incoming = GdprDataItem.Incoming(

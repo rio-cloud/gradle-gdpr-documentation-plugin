@@ -45,6 +45,7 @@ annotation class GdprData {
     @GdprData
     @Target(AnnotationTarget.CLASS)
     annotation class Persisted(
+        val databaseIdentifier: String,
         val retention: String,
         val responsibleForDeletion: String,
         val links: Array<KClass<*>> = [],
@@ -55,6 +56,7 @@ annotation class GdprData {
     annotation class ReadModel(
         val whereFrom: String,
         val whatToDo: String,
+        val databaseIdentifier: String,
         val retention: String = READ_MODEL_DEFAULT_RETENTION,
         val responsibleForDeletion: String = READ_MODEL_DEFAULT_RESPONSIBLE_FOR_DELETION,
         val links: Array<KClass<*>> = [],

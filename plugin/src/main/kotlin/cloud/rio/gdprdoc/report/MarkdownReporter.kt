@@ -161,6 +161,7 @@ class MarkdownReporter {
     ) {
         val fields = listOfNotNull(
             GdprDataItem.Persisted::name.takeIf { !compactView },
+            GdprDataItem.Persisted::databaseIdentifier,
             GdprDataItem.Persisted::responsibleForDeletion,
             GdprDataItem.Persisted::retention,
             GdprDataItem.Persisted::fields.takeIf { !compactView },
@@ -182,6 +183,7 @@ class MarkdownReporter {
         GdprDataItem.Persisted::responsibleForDeletion to "Responsible For Deletion",
         GdprDataItem.Persisted::retention to "Retention",
         GdprDataItem.Persisted::fields to "Fields",
+        GdprDataItem.Persisted::databaseIdentifier to "Database identifier",
     )
 
     private fun <T : GdprDataItem> format(field: KProperty1<T, *>, item: T) = when (field) {

@@ -44,6 +44,7 @@ data class PositionKafka(
 @GdprData.ReadModel(
     whereFrom = "Kafka topic rio.iot-events",
     whatToDo = "Enrich events during aggregation with driver card number",
+    databaseIdentifier = "arn:aws:dynamodb:region:accountId:table/driver-events",
     links = [DriverEventRest::class],
 )
 data class DriverKafka(
@@ -56,6 +57,7 @@ data class DriverKafka(
 @GdprData.ReadModel(
     whereFrom = "Kafka topic rio.permissions",
     whatToDo = "Implement Access Control for API",
+    databaseIdentifier = "arn:aws:dynamodb:region:accountId:table/permissions",
 )
 data class PermissionsKafka(
     @GdprData.Field(level = PiiLevel.PSEUDONYM)

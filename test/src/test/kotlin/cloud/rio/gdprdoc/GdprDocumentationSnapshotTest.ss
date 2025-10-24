@@ -183,11 +183,11 @@ digraph G {
 
 ## Persisted
 
-| Name | Responsible For Deletion | Retention | Fields | Links |
-| --- | --- | --- | --- | ----- |
-| [DriverEventDb](#cloud.rio.example.adapter.db.DriverEventDb#DB) | Dev team | Kept for 30 days | `assetId`, `timestamp`, `position`, `driverCardNumber` | [IotDataKafka](#cloud.rio.example.adapter.kafka.IotDataKafka#IN), [DriverEventRest](#cloud.rio.example.adapter.rest.DriverEventRest#OUT) |
-| [DriverKafka](#cloud.rio.example.adapter.kafka.DriverKafka#DB) | Owner of the upstream data source | Kept until data is deleted upstream | `driverCardNumber`, `name` | [DriverKafka](#cloud.rio.example.adapter.kafka.DriverKafka#IN), [DriverEventRest](#cloud.rio.example.adapter.rest.DriverEventRest#OUT) |
-| [PermissionsKafka](#cloud.rio.example.adapter.kafka.PermissionsKafka#DB) | Owner of the upstream data source | Kept until data is deleted upstream | `userId`, `hasAccess` | [PermissionsKafka](#cloud.rio.example.adapter.kafka.PermissionsKafka#IN) |
+| Name | Database identifier | Responsible For Deletion | Retention | Fields | Links |
+| --- | --- | --- | --- | --- | ----- |
+| [DriverEventDb](#cloud.rio.example.adapter.db.DriverEventDb#DB) | arn:aws:dynamodb:region:accountId:table/driver-events | Dev team | Kept for 30 days | `assetId`, `timestamp`, `position`, `driverCardNumber` | [IotDataKafka](#cloud.rio.example.adapter.kafka.IotDataKafka#IN), [DriverEventRest](#cloud.rio.example.adapter.rest.DriverEventRest#OUT) |
+| [DriverKafka](#cloud.rio.example.adapter.kafka.DriverKafka#DB) | arn:aws:dynamodb:region:accountId:table/driver-events | Owner of the upstream data source | Kept until data is deleted upstream | `driverCardNumber`, `name` | [DriverKafka](#cloud.rio.example.adapter.kafka.DriverKafka#IN), [DriverEventRest](#cloud.rio.example.adapter.rest.DriverEventRest#OUT) |
+| [PermissionsKafka](#cloud.rio.example.adapter.kafka.PermissionsKafka#DB) | arn:aws:dynamodb:region:accountId:table/permissions | Owner of the upstream data source | Kept until data is deleted upstream | `userId`, `hasAccess` | [PermissionsKafka](#cloud.rio.example.adapter.kafka.PermissionsKafka#IN) |
 
 <details><summary>Field Details</summary>
 

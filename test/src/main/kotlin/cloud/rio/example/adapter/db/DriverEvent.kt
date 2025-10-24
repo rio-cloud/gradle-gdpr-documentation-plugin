@@ -24,6 +24,7 @@ import java.time.Instant
 @GdprData.Persisted(
     retention = "Kept for 30 days",
     responsibleForDeletion = "Dev team",
+    databaseIdentifier = "arn:aws:dynamodb:region:accountId:table/driver-events",
     links = [IotDataKafka::class],
 )
 data class DriverEventDb(
