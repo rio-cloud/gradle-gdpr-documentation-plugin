@@ -21,7 +21,6 @@ import cloud.rio.gdprdoc.additionalgdprdata.AdditionalGdprDataMapper
 import cloud.rio.gdprdoc.annotations.GdprData
 import cloud.rio.gdprdoc.report.GdprDataItem
 import cloud.rio.gdprdoc.report.GdprItemId
-import cloud.rio.gdprdoc.report.GdprItemRelation
 import cloud.rio.gdprdoc.report.GdprReport
 import cloud.rio.gdprdoc.report.MarkdownReporter
 import io.github.classgraph.ClassGraph
@@ -109,69 +108,22 @@ abstract class GenerateGdprDocumentationTask : DefaultTask() {
                 logger.warn("Cannot read additional GDPR data from file ${it.absolutePath}: ${e.message}")
                 return@forEach
             }
-            val (additionalGdprDataItems, additionalLinks) = additionalGdprDataMapper.mapToGdprDataItems(
+            val additionalGdprDataItems = additionalGdprDataMapper.mapToGdprDataItems(
                 additionalGdprData
             )
             additionalGdprDataItems.forEach { newItem ->
                 gdprDataItems.removeIf { existingItem -> existingItem.id == newItem.id }
                 gdprDataItems.add(newItem)
             }
-            linkTargetClassesByItemId.putAll(additionalLinks)
         }
 
-        val gdprItemLinks = linkTargetClassesByItemId.flatMap { (source, targetClasses) ->
-            targetClasses.flatMap { createLinks(sourceId = source, targetClassName = it, items = gdprDataItems) }
-        }.toSet()
-
-        val report = GdprReport(serviceName = serviceName.get(), data = gdprDataItems, relations = gdprItemLinks)
+        val report = GdprReport(serviceName = serviceName.get(), data = gdprDataItems)
 
         val formattedReport = MarkdownReporter().generateReport(report = report)
         val destination = markdownReport.get().asFile
         destination.writeText(formattedReport)
 
         logger.lifecycle("GDPR Data Items: $gdprDataItems")
-        logger.lifecycle("GDPR Links:\n${gdprItemLinks.joinToString("\n")}")
-    }
-
-    fun createLinks(sourceId: GdprItemId, targetClassName: String, items: List<GdprDataItem>): Set<GdprItemRelation> {
-        val targetItems = items.filter { it.id.value.startsWith(targetClassName) }
-        val sourceItem = items.find { it.id == sourceId } ?: return emptySet()
-
-        val links = mutableSetOf<GdprItemRelation>()
-
-        for (target in targetItems) {
-            when {
-                sourceItem is GdprDataItem.Incoming && target is GdprDataItem.Persisted -> {
-                    links.add(GdprItemRelation.flow(sourceId, target.id))
-                }
-
-                sourceItem is GdprDataItem.Persisted && target is GdprDataItem.Outgoing -> {
-                    links.add(GdprItemRelation.flow(sourceId, target.id))
-                }
-
-                sourceItem is GdprDataItem.Incoming && target is GdprDataItem.Outgoing -> {
-                    links.add(GdprItemRelation.flow(sourceId, target.id))
-                }
-
-                sourceItem is GdprDataItem.Persisted && target is GdprDataItem.Incoming -> {
-                    links.add(GdprItemRelation.flow(target.id, sourceId))
-                }
-
-                sourceItem is GdprDataItem.Outgoing && target is GdprDataItem.Persisted -> {
-                    links.add(GdprItemRelation.flow(target.id, sourceId))
-                }
-
-                sourceItem is GdprDataItem.Outgoing && target is GdprDataItem.Incoming -> {
-                    links.add(GdprItemRelation.flow(target.id, sourceId))
-                }
-                // Related links (same type, but not self)
-                sourceItem::class == target::class && sourceId != target.id -> {
-                    links.add(GdprItemRelation.relatedTo(sourceId, target.id))
-                }
-            }
-        }
-
-        return links
     }
 
     fun processClass(classInfo: ClassInfo): Pair<List<GdprDataItem>, Map<GdprItemId, MutableSet<String>>> {
@@ -181,8 +133,6 @@ abstract class GenerateGdprDocumentationTask : DefaultTask() {
 
         classInfo.processAnnotation(GdprData.Incoming::class.java) { gdprData, fieldItems ->
             val id = GdprItemId(classInfo.name + "#IN")
-            linkTargetClassesByItemId.getOrPut(id) { mutableSetOf() }
-                .addAll(gdprData.links.map { it.java.name })
             listOf(
                 GdprDataItem.Incoming(
                     id = id,
@@ -197,8 +147,6 @@ abstract class GenerateGdprDocumentationTask : DefaultTask() {
 
         classInfo.processAnnotation(GdprData.Outgoing::class.java) { gdprData, fieldItems ->
             val id = GdprItemId(classInfo.name + "#OUT")
-            linkTargetClassesByItemId.getOrPut(id) { mutableSetOf() }
-                .addAll(gdprData.links.map { it.java.name })
             listOf(
                 GdprDataItem.Outgoing(
                     id = id,
@@ -212,8 +160,6 @@ abstract class GenerateGdprDocumentationTask : DefaultTask() {
 
         classInfo.processAnnotation(GdprData.Persisted::class.java) { gdprData, fieldItems ->
             val id = GdprItemId(classInfo.name + "#DB")
-            linkTargetClassesByItemId.getOrPut(id) { mutableSetOf() }
-                .addAll(gdprData.links.map { it.java.name })
             listOf(
                 GdprDataItem.Persisted(
                     id = id,
@@ -231,8 +177,6 @@ abstract class GenerateGdprDocumentationTask : DefaultTask() {
             val inId = GdprItemId(classInfo.name + "#IN")
             linkTargetClassesByItemId.getOrPut(inId) { mutableSetOf() }
                 .add(classInfo.name)
-            linkTargetClassesByItemId.getOrPut(dbId) { mutableSetOf() }
-                .addAll(gdprData.links.map { it.java.name })
             listOf(
                 GdprDataItem.Persisted(
                     id = dbId,

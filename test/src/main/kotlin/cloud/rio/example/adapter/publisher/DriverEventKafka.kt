@@ -25,7 +25,6 @@ import java.time.Instant
 @GdprData.Outgoing(
     sharedWith = "Published to kafka topic rio.driver-events",
     why = "To provide driver events to other services",
-    links = [IotDataKafka::class, DriverEventRest::class],
 )
 data class DriverEventKafka(
     @GdprData.Field(level = PiiLevel.PSEUDONYM)

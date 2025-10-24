@@ -31,9 +31,8 @@ class AdditionalGdprDataMapper(classPathFiles: Set<File>, val logger: Logger) {
 
     fun mapToGdprDataItems(
         additionalData: AdditionalGdprData,
-    ): Pair<List<GdprDataItem>, Map<GdprItemId, MutableSet<String>>> {
+    ): List<GdprDataItem> {
         val gdprDataItems = mutableListOf<GdprDataItem>()
-        val linkTargetClassesByItemId = mutableMapOf<GdprItemId, MutableSet<String>>()
 
         for (item in additionalData.classes) {
             val clazz = try {
@@ -67,8 +66,6 @@ class AdditionalGdprDataMapper(classPathFiles: Set<File>, val logger: Logger) {
                     fields = fields,
                 )
                 gdprDataItems.add(outgoing)
-                linkTargetClassesByItemId.getOrPut(outgoing.id) { mutableSetOf() }
-                    .addAll(it.links.filter(this::canLinkTo))
             }
 
             item.incoming?.let {
@@ -80,8 +77,6 @@ class AdditionalGdprDataMapper(classPathFiles: Set<File>, val logger: Logger) {
                     fields = fields,
                 )
                 gdprDataItems.add(incoming)
-                linkTargetClassesByItemId.getOrPut(incoming.id) { mutableSetOf() }
-                    .addAll(it.links.filter(this::canLinkTo))
             }
 
             item.persisted?.let {
@@ -94,8 +89,6 @@ class AdditionalGdprDataMapper(classPathFiles: Set<File>, val logger: Logger) {
                     fields = fields,
                 )
                 gdprDataItems.add(persisted)
-                linkTargetClassesByItemId.getOrPut(persisted.id) { mutableSetOf() }
-                    .addAll(it.links.filter(this::canLinkTo))
             }
 
             item.readModel?.let {
@@ -116,23 +109,9 @@ class AdditionalGdprDataMapper(classPathFiles: Set<File>, val logger: Logger) {
                 )
                 gdprDataItems.add(persisted)
                 gdprDataItems.add(incoming)
-                linkTargetClassesByItemId.getOrPut(incoming.id) { mutableSetOf() }
-                    .add(item.className)
-                linkTargetClassesByItemId.getOrPut(persisted.id) { mutableSetOf() }
-                    .addAll(it.links.filter(this::canLinkTo))
             }
         }
 
-        return Pair(gdprDataItems, linkTargetClassesByItemId)
-    }
-
-    private fun canLinkTo(className: String): Boolean {
-        try {
-            Class.forName(className, true, classLoader)
-        } catch (_: ClassNotFoundException) {
-            logger.warn("Cannot create link to {} because class was not found, skipping", className)
-            return false
-        }
-        return true
+        return gdprDataItems
     }
 }

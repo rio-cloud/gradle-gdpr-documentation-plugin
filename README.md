@@ -66,8 +66,6 @@ classes:
     incoming:
       whatToDo: Forward via API
       whereFrom: Some external service
-      links:
-        - cloud.rio.example.adapter.rest.OutgoingDTO
     fields:
       - name: id
         level: PSEUDONYM
@@ -79,15 +77,12 @@ classes:
     outgoing:
       sharedWith: Exposed via API
       why: Display in frontend
-      links:
-        - cloud.rio.example.adapter.restclient.IncomingDTO
     fields:
       ...
   - className: cloud.rio.example.adapter.db.PersistedEntity
     persisted:
       retention: 6 months
       responsibleForDeletion: Automatic deletion job
-      links: [ ]
     fields:
       ...
   - className: cloud.rio.example.adapter.readmodel.ReadModel
@@ -96,7 +91,6 @@ classes:
       whereFrom: Some external service
       retention: 6 months
       responsibleForDeletion: Automatic deletion job
-      links: [ ]
     fields:
       ...
 ```
