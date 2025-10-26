@@ -25,16 +25,13 @@ import cloud.rio.gdprdoc.report.GdprReport
 import cloud.rio.gdprdoc.report.MarkdownReporter
 import io.github.classgraph.ClassGraph
 import io.github.classgraph.ClassInfo
+import io.github.classgraph.ClassRefTypeSignature
+import io.github.classgraph.ScanResult
 import org.gradle.api.DefaultTask
 import org.gradle.api.file.ConfigurableFileCollection
 import org.gradle.api.file.RegularFileProperty
 import org.gradle.api.provider.Property
-import org.gradle.api.tasks.Classpath
-import org.gradle.api.tasks.Input
-import org.gradle.api.tasks.InputFiles
-import org.gradle.api.tasks.Optional
-import org.gradle.api.tasks.OutputFile
-import org.gradle.api.tasks.TaskAction
+import org.gradle.api.tasks.*
 import org.gradle.internal.extensions.stdlib.uncheckedCast
 import java.io.File
 import java.net.URL
@@ -56,6 +53,8 @@ abstract class GenerateGdprDocumentationTask : DefaultTask() {
     @get:InputFiles
     @get:Optional
     abstract val additionalGdprDataFiles: ConfigurableFileCollection
+
+    private lateinit var scanResult: ScanResult
 
     @TaskAction
     fun process() {
@@ -82,18 +81,20 @@ abstract class GenerateGdprDocumentationTask : DefaultTask() {
             .overrideClassLoaders(scanClassLoader)
             .scan()
 
+        this.scanResult = scanResult
+
         scanResult.getClassesWithAnnotation(GdprData::class.java.canonicalName)
             .filterNot { it.name.startsWith("cloud.rio.gdprdoc.annotations") }
             .forEach { classInfo ->
-            try {
-                logger.debug("Processing class: ${classInfo.name}")
-                val newItems = processClass(classInfo)
-                gdprDataItems.addAll(newItems)
-            } catch (e: Exception) {
-                logger.error("Error processing class ${classInfo.name}: ${e.message}")
-                throw e
+                try {
+                    logger.debug("Processing class: ${classInfo.name}")
+                    val newItems = processClass(classInfo)
+                    gdprDataItems.addAll(newItems)
+                } catch (e: Exception) {
+                    logger.error("Error processing class ${classInfo.name}: ${e.message}")
+                    throw e
+                }
             }
-        }
 
         val additionalGdprDataLoader = AdditionalGdprDataLoader()
         val additionalGdprDataMapper = AdditionalGdprDataMapper(classPathFiles, logger)
@@ -200,21 +201,86 @@ abstract class GenerateGdprDocumentationTask : DefaultTask() {
         clazz: Class<out T>,
         process: (T, List<GdprDataItem.Field>) -> List<GdprDataItem>,
     ): List<GdprDataItem> {
-        val fieldItems: List<GdprDataItem.Field> = fieldInfo
-            .filter { it.hasAnnotation(GdprData.Field::class.java) }
-            .map {
-                val gdprField =
-                    it.getAnnotationInfo(GdprData.Field::class.java).loadClassAndInstantiate() as GdprData.Field
-                GdprDataItem.Field(
-                    name = it.name,
-                    type = it.typeSignatureOrTypeDescriptor.toStringWithSimpleNames(),
-                    level = gdprField.level,
-                )
-            }
+        val fieldItems = collectAllFields(this, "", 0, mutableSetOf())
         return getAnnotationInfo(clazz)
             ?.loadClassAndInstantiate()
             ?.uncheckedCast<T>()
             ?.let { process(it, fieldItems) } ?: emptyList()
+    }
+
+    private fun collectAllFields(
+        classInfo: ClassInfo,
+        pathPrefix: String,
+        depth: Int,
+        visited: MutableSet<String>,
+    ): List<GdprDataItem.Field> {
+        if (classInfo.name in visited) {
+            logger.warn("Skipping already visited class ${classInfo.name}")
+            return emptyList()
+        }
+        if (depth > 10) {
+            logger.warn("Maximum recursion depth reached for class ${classInfo.name}")
+            return emptyList()
+        }
+        visited.add(classInfo.name)
+
+        val fields = mutableListOf<GdprDataItem.Field>()
+
+        classInfo.fieldInfo.forEach { fieldInfo ->
+            val gdprFieldAnnotation = fieldInfo.getAnnotationInfo(GdprData.Field::class.java)
+            val nestedTypeAnnotation = fieldInfo.getAnnotationInfo(GdprData.NestedType::class.java)
+
+            if (gdprFieldAnnotation != null || nestedTypeAnnotation != null) {
+                val fieldPath = if (pathPrefix.isEmpty()) fieldInfo.name else "$pathPrefix.${fieldInfo.name}"
+
+                val piiLevel = if (nestedTypeAnnotation != null) {
+                    null  // Complex types don't get PII levels
+                } else {
+                    gdprFieldAnnotation?.let {
+                        (it.loadClassAndInstantiate() as GdprData.Field).level
+                    }
+                }
+
+                fields.add(
+                    GdprDataItem.Field(
+                        name = fieldPath,
+                        type = fieldInfo.typeSignatureOrTypeDescriptor.toStringWithSimpleNames(),
+                        level = piiLevel,
+                        depth = depth
+                    )
+                )
+                logger.info(fields.joinToString(separator = "\n"))
+
+                if (nestedTypeAnnotation != null) {
+                    val typeSignature = fieldInfo.typeSignature as ClassRefTypeSignature
+                    val referencedClassNames = typeSignature.typeArguments.map { it.toString() }
+                    resolveFieldsFromNestedClass(referencedClassNames, fieldPath, depth, visited, fields)
+                }
+            }
+        }
+
+        return fields
+    }
+
+    private fun resolveFieldsFromNestedClass(
+        referencedClassNames: List<String>,
+        currentFieldPath: String,
+        currentDepth: Int,
+        alreadyVisitedClasses: MutableSet<String>,
+        fields: MutableList<GdprDataItem.Field>,
+    ) {
+        referencedClassNames.forEach { className ->
+            val fieldTypeClass = scanResult.getClassInfo(className)
+            fieldTypeClass?.let { nestedClass ->
+                val nestedFields = collectAllFields(
+                    nestedClass,
+                    currentFieldPath,
+                    currentDepth + 1,
+                    alreadyVisitedClasses.toMutableSet()
+                )
+                fields.addAll(nestedFields)
+            }
+        }
     }
 
     fun resolveJarPathForClass(className: String, classLoader: ClassLoader): File {

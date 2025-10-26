@@ -84,10 +84,11 @@ class MarkdownReporter {
             markdownBuilder.append("  </thead>\n")
             markdownBuilder.append("  <tbody>\n")
             item.fields.forEach { field ->
+                val indent = "&nbsp;".repeat(field.depth * 4)
                 markdownBuilder.append("    <tr>\n")
-                markdownBuilder.append("      <td>${field.name.monoHtml()}</td>\n")
-                markdownBuilder.append("      <td>${field.level.format()}</td>\n")
-                markdownBuilder.append("      <td>${field.type}</td>\n")
+                markdownBuilder.append("      <td>$indent${field.name.monoHtml()}</td>\n")
+                markdownBuilder.append("      <td>${field.level?.format() ?: "-"}</td>\n")
+                markdownBuilder.append("      <td>${field.type.escapeHtml()}</td>\n")
                 markdownBuilder.append("    </tr>\n")
             }
             markdownBuilder.append("  </tbody>\n")
@@ -182,13 +183,14 @@ class MarkdownReporter {
         GdprDataItem.Incoming::fields,
         GdprDataItem.Outgoing::fields,
         GdprDataItem.Persisted::fields,
-            -> item.fields.joinToString(", ") { it.name.mono() }
+            -> item.fields.filter { it.level!=null }.joinToString(", ") { it.name.mono() }
 
         else -> item.let { field.get(it) }.toString()
     }
 
     private fun String.mono(): String = "`$this`"
     private fun String.monoHtml(): String = "<code>$this</code>"
+    private fun String.escapeHtml(): String = this.replace("<", "&lt;").replace(">", "&gt;")
 
     private fun PiiLevel.format(): String {
         val color = when (this) {

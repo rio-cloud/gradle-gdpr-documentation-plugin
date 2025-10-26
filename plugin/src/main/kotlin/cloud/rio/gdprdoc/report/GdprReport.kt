@@ -66,6 +66,7 @@ sealed class GdprDataItem {
     data class Field(
         val name: String,
         val type: String,
-        val level: PiiLevel,
+        val level: PiiLevel?,
+        val depth: Int = 0,
     )
 }

@@ -61,4 +61,7 @@ annotation class GdprData {
     annotation class Field(
         val level: PiiLevel,
     )
+
+    @Target(AnnotationTarget.FIELD)
+    annotation class NestedType
 }
