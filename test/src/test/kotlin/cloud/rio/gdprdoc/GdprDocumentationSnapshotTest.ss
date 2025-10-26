@@ -138,7 +138,7 @@
 
 | Name | Database identifier | Responsible For Deletion | Retention | Fields  |
 | --- | --- | --- | --- | --- |
-| [DriverEventDb](#cloud.rio.example.adapter.db.DriverEventDb#DB) | arn:aws:dynamodb:region:accountId:table/driver-events | Dev team | Kept for 30 days | `assetId`, `timestamp`, `position`, `driverCardNumber` |
+| [DriverEventDb](#cloud.rio.example.adapter.db.DriverEventDb#DB) | arn:aws:dynamodb:region:accountId:table/driver-events | Dev team | Kept for 30 days | `assetId`, `timestamp`, `position.latitude`, `position.longitude`, `driverCardNumber` |
 | [DriverKafka](#cloud.rio.example.adapter.kafka.DriverKafka#DB) | arn:aws:dynamodb:region:accountId:table/driver-events | Owner of the upstream data source | Kept until data is deleted upstream | `driverCardNumber`, `name` |
 | [PermissionsKafka](#cloud.rio.example.adapter.kafka.PermissionsKafka#DB) | arn:aws:dynamodb:region:accountId:table/permissions | Owner of the upstream data source | Kept until data is deleted upstream | `userId`, `hasAccess` |
 
@@ -168,8 +168,18 @@
     </tr>
     <tr>
       <td><code>position</code></td>
+      <td>-</td>
+      <td>List&lt;PositionDb&gt;</td>
+    </tr>
+    <tr>
+      <td>&nbsp;&nbsp;&nbsp;&nbsp;<code>position.latitude</code></td>
       <td><span style="background-color:green; padding:2px 10px; border-radius:3px;">NON PII</span></td>
-      <td>PositionDb</td>
+      <td>double</td>
+    </tr>
+    <tr>
+      <td>&nbsp;&nbsp;&nbsp;&nbsp;<code>position.longitude</code></td>
+      <td><span style="background-color:green; padding:2px 10px; border-radius:3px;">NON PII</span></td>
+      <td>double</td>
     </tr>
     <tr>
       <td><code>driverCardNumber</code></td>

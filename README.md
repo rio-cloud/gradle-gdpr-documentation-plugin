@@ -50,6 +50,10 @@ values as parameter:
 - `PSEUDONYM`
 - `NON_PII`
 
+In case you have a nested class structure, you can mark fields with a nested type with the `@NestedType` annotation. The plugin
+will then recursively analyze the class structure and include its fields in the documentation. You need to add the
+`@Field` annotation to the nested type class fields as well.
+
 #### Configuration files
 
 You can also provide one or multiple configuration files in yaml format to classify your data.

@@ -16,7 +16,6 @@
 
 package cloud.rio.example.adapter.db
 
-import cloud.rio.example.adapter.kafka.IotDataKafka
 import cloud.rio.gdprdoc.annotations.GdprData
 import cloud.rio.gdprdoc.model.PiiLevel
 import java.time.Instant
@@ -31,13 +30,15 @@ data class DriverEventDb(
     val assetId: String,
     @GdprData.Field(level = PiiLevel.NON_PII)
     val timestamp: Instant,
-    @GdprData.Field(level = PiiLevel.NON_PII)
-    val position: PositionDb,
+    @GdprData.NestedType
+    val position: List<PositionDb>,
     @GdprData.Field(level = PiiLevel.PSEUDONYM)
     val driverCardNumber: String,
 )
 
 data class PositionDb(
+    @GdprData.Field(level = PiiLevel.NON_PII)
     val latitude: Double,
+    @GdprData.Field(level = PiiLevel.NON_PII)
     val longitude: Double,
 )
