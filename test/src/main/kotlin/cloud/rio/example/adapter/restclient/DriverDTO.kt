@@ -22,6 +22,10 @@ data class DriverDTO(
     val id: UUID,
     val lastName: String,
     val identification: String,
+    val address: AddressDTO,
     val firstName: String? = null,
 )
 
+data class AddressDTO(
+    val street: String,
+)

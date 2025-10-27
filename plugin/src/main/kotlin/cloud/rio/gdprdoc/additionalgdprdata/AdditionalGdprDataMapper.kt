@@ -43,19 +43,7 @@ class AdditionalGdprDataMapper(classPathFiles: Set<File>, val logger: Logger) {
             }
 
             val simpleClassName = clazz.simpleName ?: item.className
-
-            val fields = item.fields.mapNotNull { field ->
-                clazz.memberProperties.find { it.name == field.name }?.let { member ->
-                    GdprDataItem.Field(
-                        name = field.name,
-                        level = field.level,
-                        type = member.returnType.jvmErasure.simpleName ?: "Unknown"
-                    )
-                } ?: run {
-                    logger.warn("Field not found: {} in class {}, skipping", field.name, item.className)
-                    null
-                }
-            }
+            val fields = collectFields(additionalData, item, clazz, 0, "", mutableSetOf())
 
             item.outgoing?.let {
                 val outgoing = GdprDataItem.Outgoing(
@@ -113,5 +101,91 @@ class AdditionalGdprDataMapper(classPathFiles: Set<File>, val logger: Logger) {
         }
 
         return gdprDataItems
+    }
+
+    private fun collectFields(
+        additionalData: AdditionalGdprData,
+        currentItem: AdditionalGdprDataItem,
+        clazz: kotlin.reflect.KClass<*>,
+        depth: Int,
+        pathPrefix: String,
+        visited: MutableSet<String>,
+    ): List<GdprDataItem.Field> {
+        if (depth > 10) {
+            logger.warn("Maximum nesting depth reached for class {}", clazz.qualifiedName)
+            return emptyList()
+        }
+
+        val className = clazz.qualifiedName ?: clazz.simpleName ?: "Unknown"
+        if (visited.contains(className)) {
+            logger.warn("Circular reference detected for class {}, skipping", className)
+            return emptyList()
+        }
+        visited.add(className)
+
+        val fields = mutableListOf<GdprDataItem.Field>()
+
+        for (fieldData in currentItem.fields) {
+            val field = Field.fromFieldData(fieldData)
+            val member = clazz.memberProperties.find { it.name == field.name }
+
+            if (member == null) {
+                logger.warn("Field not found: {} in class {}, skipping", field.name, clazz.qualifiedName)
+                continue
+            }
+
+            val fieldType = member.returnType.jvmErasure.simpleName ?: "Unknown"
+            val fieldPath = if (pathPrefix.isEmpty()) field.name else "$pathPrefix.${field.name}"
+
+            when (field) {
+                is Field.SimpleType -> {
+                    fields.add(
+                        GdprDataItem.Field(
+                            name = fieldPath,
+                            level = field.level,
+                            type = fieldType,
+                            depth = depth
+                        )
+                    )
+                }
+
+                is Field.NestedType -> {
+                    fields.add(
+                        GdprDataItem.Field(
+                            name = fieldPath,
+                            level = null,
+                            type = fieldType,
+                            depth = depth
+                        )
+                    )
+
+                    for (nestedClassName in field.nestedTypeClasses) {
+                        if (visited.contains(nestedClassName)) {
+                            logger.warn("Circular reference detected for nested class {}, skipping", nestedClassName)
+                            continue
+                        }
+
+                        val nestedClass = Class.forName(nestedClassName, true, classLoader).kotlin
+                        val nestedClassConfig = additionalData.classes.find { it.className == nestedClassName }
+
+                        if (nestedClassConfig != null) {
+                            // Use YAML configuration for nested class
+                            val nestedFields = collectFields(
+                                additionalData,
+                                nestedClassConfig,
+                                nestedClass,
+                                depth + 1,
+                                fieldPath,
+                                visited.toMutableSet()
+                            )
+                            fields.addAll(nestedFields)
+                        }
+                    }
+                }
+            }
+        }
+
+        visited.remove(className)
+        return fields
     }
 }

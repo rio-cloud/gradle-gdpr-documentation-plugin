@@ -33,7 +33,7 @@ data class AdditionalGdprDataItem(
     val incoming: Incoming? = null,
     val persisted: Persisted? = null,
     val readModel: ReadModel? = null,
-    val fields: List<Field>,
+    val fields: List<FieldData>,
 )
 
 @Serializable
@@ -65,7 +65,35 @@ data class ReadModel(
 )
 
 @Serializable
-data class Field(
+data class FieldData(
     val name: String,
-    val level: PiiLevel,
+    val level: PiiLevel? = null,
+    val nestedTypes: List<String> = emptyList()
 )
+
+sealed class Field {
+    abstract val name: String
+
+    data class SimpleType(
+        override val name: String,
+        val level: PiiLevel
+    ) : Field()
+
+    data class NestedType(
+        override val name: String,
+        val nestedTypeClasses: List<String>
+    ) : Field()
+
+    companion object {
+        fun fromFieldData(fieldData: FieldData): Field {
+            return if (fieldData.nestedTypes.isNotEmpty()) {
+                NestedType(fieldData.name, fieldData.nestedTypes)
+            } else if (fieldData.level != null) {
+                SimpleType(fieldData.name, fieldData.level)
+            } else {
+                throw IllegalArgumentException("Field ${fieldData.name} must have either level or nestedTypes")
+            }
+        }
+    }
+}
+

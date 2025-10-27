@@ -98,7 +98,20 @@ classes:
       databaseIdentifier: arn:aws:dynamodb:region:accountId:table/read-model
       responsibleForDeletion: Automatic deletion job
     fields:
-      ...
+  - className: cloud.rio.example.adapter.outgoing.NestedTypeEntity
+    outgoing:
+      sharedWith: Exposed via API
+      why: Display in frontend
+    fields:
+        - name: id
+          level: PSEUDONYM
+        - name: nestedType
+          nestedTypes:
+            - cloud.rio.example.adapter.outgoing.NestedType
+  - className: cloud.rio.example.adapter.outgoing.NestedType
+    fields:
+        - name: detail
+          level: PII
 ```
 
 ### Apply and configure the plugin

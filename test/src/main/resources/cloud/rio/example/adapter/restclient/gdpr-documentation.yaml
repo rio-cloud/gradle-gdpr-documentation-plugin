@@ -14,3 +14,12 @@ classes:
         level: PII
       - name: email # Non-existant field, should be ignored
         level: PII
+      - name: address
+        nestedTypes:
+          - cloud.rio.example.adapter.restclient.AddressDTO
+
+  - className: cloud.rio.example.adapter.restclient.AddressDTO
+    fields:
+      - name: street
+        level: NON_PII
+
