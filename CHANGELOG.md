@@ -1,5 +1,20 @@
 # Changelog
 
+## [3.0.0](https://github.com/rio-cloud/gradle-gdpr-documentation-plugin/compare/v2.1.1...v3.0.0) (2025-10-27)
+
+
+### ⚠ BREAKING CHANGES
+
+* remove links feature as this breaks architecture tests and is not required by security guild
+* introduce required databaseIdentifier property for persisted & readModel definitions
+
+### Features
+
+* Add support for nested class structures via additional gdpr data files. ([765c9a0](https://github.com/rio-cloud/gradle-gdpr-documentation-plugin/commit/765c9a09b58b7875482ab4810bbc8ad86f941567))
+* Add support for nested class structures. ([55b4724](https://github.com/rio-cloud/gradle-gdpr-documentation-plugin/commit/55b4724974d42fdf836fd15dd65d36558a61c865))
+* introduce required databaseIdentifier property for persisted & readModel definitions ([c608a50](https://github.com/rio-cloud/gradle-gdpr-documentation-plugin/commit/c608a501cf74c5492b1fb807eebb7aa66a9582ed))
+* remove links feature as this breaks architecture tests and is not required by security guild ([875e492](https://github.com/rio-cloud/gradle-gdpr-documentation-plugin/commit/875e49209212d0d54a5913ff2b4686f5e1fbae61))
+
 ## [2.1.1](https://github.com/rio-cloud/gradle-gdpr-documentation-plugin/compare/v2.1.0...v2.1.1) (2025-09-03)
 
 
