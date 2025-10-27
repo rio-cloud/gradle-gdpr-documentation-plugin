@@ -8,7 +8,7 @@
 | [DriverKafka](#cloud.rio.example.adapter.kafka.DriverKafka#IN) | Kafka topic rio.iot-events | Enrich events during aggregation with driver card number | `driverCardNumber`, `name` |
 | [IotDataKafka](#cloud.rio.example.adapter.kafka.IotDataKafka#IN) | Kafka topic rio.iot-events | Generate aggregated events | `assetId`, `timestamp`, `position`, `driverCardNumber` |
 | [PermissionsKafka](#cloud.rio.example.adapter.kafka.PermissionsKafka#IN) | Kafka topic rio.permissions | Implement Access Control for API | `userId`, `hasAccess` |
-| [DriverDTO](#cloud.rio.example.adapter.restclient.DriverDTO#IN) | Some external service | Forward via API | `id`, `identification`, `firstName`, `lastName` |
+| [DriverDTO](#cloud.rio.example.adapter.restclient.DriverDTO#IN) | Some external service | Forward via API | `id`, `identification`, `firstName`, `lastName`, `address.street` |
 
 <details><summary>Field Details</summary>
 
@@ -127,6 +127,16 @@
     <tr>
       <td><code>lastName</code></td>
       <td><span style="background-color:red; padding:2px 10px; border-radius:3px;">PII</span></td>
+      <td>String</td>
+    </tr>
+    <tr>
+      <td><code>address</code></td>
+      <td>-</td>
+      <td>AddressDTO</td>
+    </tr>
+    <tr>
+      <td>&nbsp;&nbsp;&nbsp;&nbsp;<code>address.street</code></td>
+      <td><span style="background-color:green; padding:2px 10px; border-radius:3px;">NON PII</span></td>
       <td>String</td>
     </tr>
   </tbody>
