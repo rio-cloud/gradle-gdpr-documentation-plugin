@@ -148,7 +148,7 @@
 
 | Name | Database identifier | Responsible For Deletion | Retention | Fields  |
 | --- | --- | --- | --- | --- |
-| [DriverEventDb](#cloud.rio.example.adapter.db.DriverEventDb#DB) | arn:aws:dynamodb:region:accountId:table/driver-events | Dev team | Kept for 30 days | `assetId`, `timestamp`, `position.latitude`, `position.longitude`, `driverCardNumber` |
+| [DriverEventDb](#cloud.rio.example.adapter.db.DriverEventDb#DB) | arn:aws:dynamodb:region:accountId:table/driver-events | Dev team | Kept for 30 days | `assetId`, `timestamp`, `position.latitude`, `position.longitude`, `driverCardNumber`, `address.street`, `address.city`, `address.country` |
 | [DriverKafka](#cloud.rio.example.adapter.kafka.DriverKafka#DB) | arn:aws:dynamodb:region:accountId:table/driver-events | Owner of the upstream data source | Kept until data is deleted upstream | `driverCardNumber`, `name` |
 | [PermissionsKafka](#cloud.rio.example.adapter.kafka.PermissionsKafka#DB) | arn:aws:dynamodb:region:accountId:table/permissions | Owner of the upstream data source | Kept until data is deleted upstream | `userId`, `hasAccess` |
 
@@ -194,6 +194,26 @@
     <tr>
       <td><code>driverCardNumber</code></td>
       <td><span style="background-color:darkorange; padding:2px 10px; border-radius:3px;">PSEUDONYM</span></td>
+      <td>String</td>
+    </tr>
+    <tr>
+      <td><code>address</code></td>
+      <td>-</td>
+      <td>AddressDb</td>
+    </tr>
+    <tr>
+      <td>&nbsp;&nbsp;&nbsp;&nbsp;<code>address.street</code></td>
+      <td><span style="background-color:green; padding:2px 10px; border-radius:3px;">NON PII</span></td>
+      <td>String</td>
+    </tr>
+    <tr>
+      <td>&nbsp;&nbsp;&nbsp;&nbsp;<code>address.city</code></td>
+      <td><span style="background-color:green; padding:2px 10px; border-radius:3px;">NON PII</span></td>
+      <td>String</td>
+    </tr>
+    <tr>
+      <td>&nbsp;&nbsp;&nbsp;&nbsp;<code>address.country</code></td>
+      <td><span style="background-color:green; padding:2px 10px; border-radius:3px;">NON PII</span></td>
       <td>String</td>
     </tr>
   </tbody>
