@@ -34,6 +34,8 @@ data class DriverEventDb(
     val position: List<PositionDb>,
     @GdprData.Field(level = PiiLevel.PSEUDONYM)
     val driverCardNumber: String,
+    @GdprData.NestedType
+    val address: AddressDb,
 )
 
 data class PositionDb(
@@ -41,4 +43,13 @@ data class PositionDb(
     val latitude: Double,
     @GdprData.Field(level = PiiLevel.NON_PII)
     val longitude: Double,
+)
+
+data class AddressDb(
+    @GdprData.Field(level = PiiLevel.NON_PII)
+    val street: String,
+    @GdprData.Field(level = PiiLevel.NON_PII)
+    val city: String,
+    @GdprData.Field(level = PiiLevel.NON_PII)
+    val country: String,
 )

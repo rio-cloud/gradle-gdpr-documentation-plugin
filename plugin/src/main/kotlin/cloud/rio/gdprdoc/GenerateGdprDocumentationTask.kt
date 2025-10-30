@@ -252,8 +252,8 @@ abstract class GenerateGdprDocumentationTask : DefaultTask() {
                 logger.info(fields.joinToString(separator = "\n"))
 
                 if (nestedTypeAnnotation != null) {
-                    val typeSignature = fieldInfo.typeSignature as ClassRefTypeSignature
-                    val referencedClassNames = typeSignature.typeArguments.map { it.toString() }
+                    val typeSignature = fieldInfo.typeSignature as ClassRefTypeSignature?
+                    val referencedClassNames = typeSignature?.typeArguments?.map { it.toString() } ?: listOf(fieldInfo.typeDescriptor.toString())
                     resolveFieldsFromNestedClass(referencedClassNames, fieldPath, depth, visited, fields)
                 }
             }
