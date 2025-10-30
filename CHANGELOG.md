@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.0.1](https://github.com/rio-cloud/gradle-gdpr-documentation-plugin/compare/v3.0.0...v3.0.1) (2025-10-30)
+
+
+### Bug Fixes
+
+* fix npe when trying to declare a nested type which is not wrapped in e.g. a list ([8cc2bf7](https://github.com/rio-cloud/gradle-gdpr-documentation-plugin/commit/8cc2bf7fbdb6135a774fcfbe865d8f8565c6cae6))
+
 ## [3.0.0](https://github.com/rio-cloud/gradle-gdpr-documentation-plugin/compare/v2.1.1...v3.0.0) (2025-10-27)
 
 
