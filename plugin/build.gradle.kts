@@ -17,9 +17,9 @@
 
 plugins {
     kotlin("jvm")
-    kotlin("plugin.serialization") version "1.9.0"
-    id("com.gradle.plugin-publish") version "1.3.1"
-    id("com.gradleup.shadow") version "8.3.9"
+    kotlin("plugin.serialization") version "2.2.21"
+    id("com.gradle.plugin-publish") version "2.0.0"
+    id("com.gradleup.shadow") version "9.3.2"
     `java-gradle-plugin`
 }
 
@@ -29,9 +29,9 @@ repositories {
 
 dependencies {
     compileOnly(gradleApi())
-    implementation("com.charleskorn.kaml:kaml:0.92.0")
+    implementation("com.charleskorn.kaml:kaml:0.104.0")
     implementation(kotlin("stdlib"))
-    implementation("io.github.classgraph:classgraph:4.8.162")
+    implementation("io.github.classgraph:classgraph:4.8.184")
     implementation(project(":core"))
 }
 

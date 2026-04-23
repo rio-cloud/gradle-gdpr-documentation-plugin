@@ -20,7 +20,7 @@ plugins {
     kotlin("jvm")
     `java-library`
     id("maven-publish")
-    id("org.jreleaser") version "1.19.0"
+    id("org.jreleaser") version "1.23.0"
 }
 
 repositories {
@@ -96,7 +96,9 @@ jreleaser {
     gitRootSearch = true
     signing {
         active.set(Active.ALWAYS)
-        armored.set(true)
+        pgp {
+            armored.set(true)
+        }
     }
     deploy {
         maven {

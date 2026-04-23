@@ -1,5 +1,5 @@
 plugins {
-    kotlin("jvm") version "2.2.10"
+    kotlin("jvm") version "2.2.21"
     id("cloud.rio.gdprdoc")  // no version needed (resolved from includeBuild)
 }
 
@@ -11,8 +11,8 @@ dependencies {
     implementation(kotlin("stdlib"))
     // thanks to dependencySubstitution above, we can depend on core without a version:
     compileOnly("cloud.rio.gdprdoc:core")
-    testImplementation("com.diffplug.selfie:selfie-runner-junit5:2.5.3")
-    testImplementation("org.junit.jupiter:junit-jupiter:5.13.4")
+    testImplementation("com.diffplug.selfie:selfie-runner-junit5:2.5.5")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.14.3")
 }
 
 java {
