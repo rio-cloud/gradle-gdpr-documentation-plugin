@@ -201,7 +201,7 @@ abstract class GenerateGdprDocumentationTask : DefaultTask() {
         clazz: Class<out T>,
         process: (T, List<GdprDataItem.Field>) -> List<GdprDataItem>,
     ): List<GdprDataItem> {
-        val fieldItems = collectAllFields(this, "", 0, mutableSetOf())
+        val fieldItems = collectAllFields(this, "", 0, mutableSetOf()).distinct()
         return getAnnotationInfo(clazz)
             ?.loadClassAndInstantiate()
             ?.uncheckedCast<T>()
@@ -269,18 +269,36 @@ abstract class GenerateGdprDocumentationTask : DefaultTask() {
         alreadyVisitedClasses: MutableSet<String>,
         fields: MutableList<GdprDataItem.Field>,
     ) {
-        referencedClassNames.forEach { className ->
-            val fieldTypeClass = scanResult.getClassInfo(className)
-            fieldTypeClass?.let { nestedClass ->
-                val nestedFields = collectAllFields(
-                    nestedClass,
-                    currentFieldPath,
-                    currentDepth + 1,
-                    alreadyVisitedClasses.toMutableSet()
-                )
-                fields.addAll(nestedFields)
-            }
+        resolveNestedClasses(referencedClassNames).forEach { nestedClass ->
+            val nestedFields = collectAllFields(
+                nestedClass,
+                currentFieldPath,
+                currentDepth + 1,
+                alreadyVisitedClasses.toMutableSet()
+            )
+            fields.addAll(nestedFields)
         }
+    }
+
+    private fun resolveNestedClasses(referencedClassNames: List<String>): List<ClassInfo> {
+        val nestedClasses = linkedMapOf<String, ClassInfo>()
+
+        referencedClassNames.forEach { className ->
+            val referencedClass = scanResult.getClassInfo(className) ?: return@forEach
+            nestedClasses.putIfAbsent(referencedClass.name, referencedClass)
+
+            val polymorphicNestedClasses = when {
+                referencedClass.isInterface -> referencedClass.getClassesImplementing()
+                referencedClass.isAbstract -> referencedClass.subclasses
+                else -> emptyList()
+            }
+
+            polymorphicNestedClasses
+                .filterNot { it.isExternalClass() }
+                .forEach { nestedClasses.putIfAbsent(it.name, it) }
+        }
+
+        return nestedClasses.values.toList()
     }
 
     fun resolveJarPathForClass(className: String, classLoader: ClassLoader): File {
@@ -291,4 +309,3 @@ abstract class GenerateGdprDocumentationTask : DefaultTask() {
     }
 
 }
-

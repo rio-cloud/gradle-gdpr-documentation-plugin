@@ -277,6 +277,8 @@
 | --- | --- | --- | --- |
 | [DriverEventKafka](#cloud.rio.example.adapter.publisher.DriverEventKafka#OUT) | Published to kafka topic rio.driver-events | To provide driver events to other services | `assetId`, `timestamp`, `driverCardNumber` |
 | [DriverEventRest](#cloud.rio.example.adapter.rest.DriverEventRest#OUT) | Logged in user via frontend / API call | To show the driver event on the live monitor | `assetId`, `timestamp`, `address`, `driverName` |
+| [DriverProfileRest](#cloud.rio.example.adapter.rest.DriverProfileRest#OUT) | Driver API | Expose polymorphic driver profiles to the frontend | `driver.type`, `driver.address.street`, `driver.driverId`, `driver.fleetOperator` |
+| [FleetMovementRest](#cloud.rio.example.adapter.rest.FleetMovementRest#OUT) | Fleet monitor UI | Expose polymorphic fleet movements to dispatchers | `movements.kind`, `movements.driverId`, `movements.depot.city`, `movements.routeNumber` |
 
 <details><summary>Field Details</summary>
 
@@ -340,6 +342,96 @@
     <tr>
       <td><code>driverName</code></td>
       <td><span style="background-color:red; padding:2px 10px; border-radius:3px;">PII</span></td>
+      <td>String</td>
+    </tr>
+  </tbody>
+</table>
+
+<a id="cloud.rio.example.adapter.rest.DriverProfileRest#OUT"></a>
+
+<h3>DriverProfileRest</h3>
+<table>
+  <thead>
+    <tr>
+      <th>Field Name</th>
+      <th>PII Level</th>
+      <th>Type</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>driver</code></td>
+      <td>-</td>
+      <td>DriverResponse</td>
+    </tr>
+    <tr>
+      <td>&nbsp;&nbsp;&nbsp;&nbsp;<code>driver.type</code></td>
+      <td><span style="background-color:green; padding:2px 10px; border-radius:3px;">NON PII</span></td>
+      <td>String</td>
+    </tr>
+    <tr>
+      <td>&nbsp;&nbsp;&nbsp;&nbsp;<code>driver.address</code></td>
+      <td>-</td>
+      <td>DriverAddressResource</td>
+    </tr>
+    <tr>
+      <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<code>driver.address.street</code></td>
+      <td><span style="background-color:green; padding:2px 10px; border-radius:3px;">NON PII</span></td>
+      <td>String</td>
+    </tr>
+    <tr>
+      <td>&nbsp;&nbsp;&nbsp;&nbsp;<code>driver.driverId</code></td>
+      <td><span style="background-color:darkorange; padding:2px 10px; border-radius:3px;">PSEUDONYM</span></td>
+      <td>String</td>
+    </tr>
+    <tr>
+      <td>&nbsp;&nbsp;&nbsp;&nbsp;<code>driver.fleetOperator</code></td>
+      <td><span style="background-color:green; padding:2px 10px; border-radius:3px;">NON PII</span></td>
+      <td>String</td>
+    </tr>
+  </tbody>
+</table>
+
+<a id="cloud.rio.example.adapter.rest.FleetMovementRest#OUT"></a>
+
+<h3>FleetMovementRest</h3>
+<table>
+  <thead>
+    <tr>
+      <th>Field Name</th>
+      <th>PII Level</th>
+      <th>Type</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>movements</code></td>
+      <td>-</td>
+      <td>List&lt;FleetMovement&gt;</td>
+    </tr>
+    <tr>
+      <td>&nbsp;&nbsp;&nbsp;&nbsp;<code>movements.kind</code></td>
+      <td><span style="background-color:green; padding:2px 10px; border-radius:3px;">NON PII</span></td>
+      <td>String</td>
+    </tr>
+    <tr>
+      <td>&nbsp;&nbsp;&nbsp;&nbsp;<code>movements.driverId</code></td>
+      <td><span style="background-color:darkorange; padding:2px 10px; border-radius:3px;">PSEUDONYM</span></td>
+      <td>String</td>
+    </tr>
+    <tr>
+      <td>&nbsp;&nbsp;&nbsp;&nbsp;<code>movements.depot</code></td>
+      <td>-</td>
+      <td>DepotResource</td>
+    </tr>
+    <tr>
+      <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<code>movements.depot.city</code></td>
+      <td><span style="background-color:green; padding:2px 10px; border-radius:3px;">NON PII</span></td>
+      <td>String</td>
+    </tr>
+    <tr>
+      <td>&nbsp;&nbsp;&nbsp;&nbsp;<code>movements.routeNumber</code></td>
+      <td><span style="background-color:green; padding:2px 10px; border-radius:3px;">NON PII</span></td>
       <td>String</td>
     </tr>
   </tbody>

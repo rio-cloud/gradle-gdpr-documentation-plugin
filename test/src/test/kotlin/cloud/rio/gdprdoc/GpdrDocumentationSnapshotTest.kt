@@ -17,6 +17,9 @@
 package cloud.rio.gdprdoc
 
 import com.diffplug.selfie.Selfie.expectSelfie
+import org.junit.jupiter.api.Assertions.assertAll
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import java.nio.file.Files
 import java.nio.file.Paths
@@ -28,6 +31,34 @@ class GdprDocumentationSnapshotTest {
         val path = Paths.get("build/reports/gdpr-documentation.md")
         val content = Files.readString(path)
         expectSelfie(content).toMatchDisk()
+    }
+
+    @Test
+    fun `sealed nested polymorphic types are expanded`() {
+        val content = Files.readString(Paths.get("build/reports/gdpr-documentation.md"))
+
+        assertAll(
+            { assertTrue(content.contains("DriverProfileRest")) },
+            { assertTrue(content.contains("`driver.type`")) },
+            { assertTrue(content.contains("`driver.address.street`")) },
+            { assertTrue(content.contains("`driver.driverId`")) },
+            { assertTrue(content.contains("`driver.fleetOperator`")) },
+            { assertEquals(2, Regex("driver\\.type").findAll(content).count()) },
+        )
+    }
+
+    @Test
+    fun `abstract nested polymorphic collection types are expanded`() {
+        val content = Files.readString(Paths.get("build/reports/gdpr-documentation.md"))
+
+        assertAll(
+            { assertTrue(content.contains("FleetMovementRest")) },
+            { assertTrue(content.contains("`movements.kind`")) },
+            { assertTrue(content.contains("`movements.driverId`")) },
+            { assertTrue(content.contains("`movements.depot.city`")) },
+            { assertTrue(content.contains("`movements.routeNumber`")) },
+            { assertEquals(2, Regex("movements\\.kind").findAll(content).count()) },
+        )
     }
 
 }
