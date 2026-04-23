@@ -1,5 +1,17 @@
 # Changelog
 
+## [3.1.0](https://github.com/rio-cloud/gradle-gdpr-documentation-plugin/compare/v3.0.1...v3.1.0) (2026-04-23)
+
+
+### Features
+
+* add support fot sealed interface and abstract classes ([#47](https://github.com/rio-cloud/gradle-gdpr-documentation-plugin/issues/47)) ([1e3770a](https://github.com/rio-cloud/gradle-gdpr-documentation-plugin/commit/1e3770a626bb22ce1343037113f262f7b1014f30))
+
+
+### Bug Fixes
+
+* upgrade dependencies ([9a2e940](https://github.com/rio-cloud/gradle-gdpr-documentation-plugin/commit/9a2e940a5b6244c27d30dcf15bb19e498bbc8d87))
+
 ## [3.0.1](https://github.com/rio-cloud/gradle-gdpr-documentation-plugin/compare/v3.0.0...v3.0.1) (2025-10-30)
 
 
