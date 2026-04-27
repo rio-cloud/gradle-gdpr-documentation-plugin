@@ -18,7 +18,7 @@
 plugins {
     kotlin("jvm")
     kotlin("plugin.serialization") version "2.2.21"
-    id("com.gradle.plugin-publish") version "2.0.0"
+    id("com.gradle.plugin-publish") version "2.1.1"
     id("com.gradleup.shadow") version "9.3.2"
     `java-gradle-plugin`
 }
